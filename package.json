@@ -7,7 +7,8 @@
     "start": "next start",
     "lint": "next lint --ignore-path .gitignore",
     "format": "prettier --write . --ignore-path .gitignore",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "echo 'no test here yet'"
   },
   "dependencies": {
     "next": "12.0.8",
