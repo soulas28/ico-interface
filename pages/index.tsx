@@ -5,7 +5,7 @@ import { useState } from 'react'
 
 const Home: NextPage = () => {
   return (
-    <div className="flex flex-col h-full bg-white-pink">
+    <div className="relative flex flex-col h-full bg-white-pink">
       <Head>
         <title>Token name here</title>
       </Head>
@@ -20,22 +20,7 @@ const Home: NextPage = () => {
             str="---- Blocks Remaining Until the Period Sale Ends"
             className="text-4xl leading-15"
           />
-          <div className="relative">
-            <div className="absolute z-50 flex flex-col items-center px-10 py-10 bg-blue-black/25 rounded-3xl">
-              <CurrencyInput unit="ETH" hidden />
-              <DownArrow hidden />
-              <CurrencyInput unit="TKN" hidden />
-              <DownArrow hidden />
-              <Button str="Participate" className="w-[560px]" disabled hidden />
-            </div>
-            <div className="flex flex-col items-center px-10 py-10 bg-white rounded-3xl drop-shadow">
-              <CurrencyInput unit="ETH" />
-              <DownArrow />
-              <CurrencyInput unit="TKN" />
-              <DownArrow hidden />
-              <Button str="Participate" className="w-[560px]" disabled />
-            </div>
-          </div>
+          <SwapForm type="participate" disabled />
         </div>
         <div className="flex flex-col items-center justify-center grow">
           <Text
@@ -153,6 +138,42 @@ const DownArrow: React.FC<DownArrowProps> = (props) => {
         alt="down arrow"
         priority
       />
+    </div>
+  )
+}
+
+interface SwapFormProps {
+  disabled?: boolean
+  type: 'participate' | 'purchase'
+}
+
+const SwapForm: React.FC<SwapFormProps> = (props) => {
+  return (
+    <div className="relative">
+      <div
+        className={
+          'absolute z-10 flex flex-col items-center px-10 py-10 bg-blue-black/25 rounded-3xl' +
+          ' ' +
+          (props.disabled ? '' : 'invisible')
+        }
+      >
+        <CurrencyInput unit="ETH" hidden />
+        <DownArrow hidden />
+        <CurrencyInput unit="TKN" hidden />
+        <DownArrow hidden />
+        <Button str="Participate" className="w-[560px]" disabled hidden />
+      </div>
+      <div className="flex flex-col items-center px-10 py-10 bg-white rounded-3xl drop-shadow">
+        <CurrencyInput unit="ETH" />
+        <DownArrow />
+        <CurrencyInput unit="TKN" />
+        <DownArrow hidden />
+        <Button
+          str={props.type === 'participate' ? 'Participate' : 'Purchase'}
+          className="w-[560px]"
+          disabled={props.disabled}
+        />
+      </div>
     </div>
   )
 }
