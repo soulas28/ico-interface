@@ -19,6 +19,9 @@ module.exports = {
       lineHeight: {
         15: '3.75rem',
       },
+      transitionProperty: {
+        visibility: 'opacity, visibility',
+      },
     },
   },
   plugins: [],

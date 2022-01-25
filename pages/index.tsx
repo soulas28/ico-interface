@@ -1,26 +1,75 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import type { MouseEventHandler } from 'react'
 import { useState } from 'react'
 
 const Home: NextPage = () => {
+  const [isWalletMenuShown, setIsWalletMenuShown] = useState(false)
+  const [isWalletConnected, setIsWalletConnected] = useState(false)
+
+  const openWalletMenu = () => setIsWalletMenuShown(true)
+  const closeWalletMenu = () => setIsWalletMenuShown(false)
+
   return (
     <div className="relative flex flex-col h-full bg-white-pink">
       <Head>
         <title>Token name here</title>
       </Head>
-      <div className="flex flex-row items-center justify-between px-12 grow-0 font">
-        <Button hidden str="Connect Wallet" />
-        <h1 className="h-[6.75rem] text-[4rem] text-blue-black">Token Logo</h1>
-        <Button str="Connect Wallet" />
+
+      {/* Wallet Menu Modal */}
+      <div
+        className={
+          'absolute z-50 flex flex-row items-center justify-center w-full h-full bg-blue-black/25 cursor-pointer transition-visibility duration-300' +
+          ' ' +
+          (isWalletMenuShown ? '' : 'invisible opacity-0')
+        }
+        onClick={closeWalletMenu}
+      >
+        <div
+          className="py-5 bg-white rounded-3xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div
+            className="p-8"
+            onClick={() => {
+              setIsWalletConnected(true)
+              closeWalletMenu()
+            }}
+          >
+            <Image
+              alt="metamask logo"
+              src="/metamask-logo.svg"
+              width="320"
+              height="62"
+            />
+          </div>
+        </div>
       </div>
+
+      {/* Header */}
+      <header className="flex flex-row items-center justify-between px-12 grow-0 font">
+        <Button
+          hidden
+          str={isWalletConnected ? 'Disconnect Wallet' : 'Connect Wallet'}
+        />
+        <h1 className="h-[6.75rem] text-[4rem] text-blue-black">Token Logo</h1>
+        <Button
+          str={isWalletConnected ? 'Disconnect Wallet' : 'Connect Wallet'}
+          onClick={() =>
+            isWalletConnected ? setIsWalletConnected(false) : openWalletMenu()
+          }
+        />
+      </header>
+
+      {/* Main Contents */}
       <div className="flex flex-col grow">
         <div className="flex flex-col items-center grow-0">
           <Text
             str="---- Blocks Remaining Until the Period Sale Ends"
             className="text-4xl leading-15"
           />
-          <SwapForm type="participate" disabled />
+          <SwapForm type="participate" disabled={!isWalletConnected} />
         </div>
         <div className="flex flex-col items-center justify-center grow">
           <Text
@@ -39,6 +88,7 @@ interface ButtonProps {
   str: string
   className?: string
   disabled?: boolean
+  onClick?: MouseEventHandler<HTMLButtonElement>
 }
 
 const Button: React.FC<ButtonProps> = (props) => {
@@ -54,7 +104,7 @@ const Button: React.FC<ButtonProps> = (props) => {
         (props.disabled ? 'bg-blue-black/50' : 'bg-red-pink')
       }
       value="test"
-      onClick={() => alert('test')}
+      onClick={props.onClick}
       disabled={props.disabled}
     >
       {props.str}
@@ -112,7 +162,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = (props) => {
       <input
         type="text"
         className="text-5xl bg-transparent font grow text-blue-black/80 max-w-[460px] focus:outline-none"
-        value="437847323"
+        defaultValue="437847323"
         onFocus={() => setIsBeingFocused(true)}
         onBlur={() => setIsBeingFocused(false)}
       />
@@ -150,6 +200,7 @@ interface SwapFormProps {
 const SwapForm: React.FC<SwapFormProps> = (props) => {
   return (
     <div className="relative">
+      {/* gray overlay */}
       <div
         className={
           'absolute z-10 flex flex-col items-center px-10 py-10 bg-blue-black/25 rounded-3xl' +
@@ -163,6 +214,7 @@ const SwapForm: React.FC<SwapFormProps> = (props) => {
         <DownArrow hidden />
         <Button str="Participate" className="w-[560px]" disabled hidden />
       </div>
+
       <div className="flex flex-col items-center px-10 py-10 bg-white rounded-3xl drop-shadow">
         <CurrencyInput unit="ETH" />
         <DownArrow />
