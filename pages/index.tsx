@@ -66,47 +66,51 @@ const Home: NextPage = () => {
       </header>
 
       {/* Main Contents */}
-      {/* Shown when not closed */}
-      <div
-        className={
-          'flex flex-col grow' + ' ' + (salePhase === 'Closed' ? 'hidden' : '')
-        }
-      >
-        <div className="flex flex-col items-center grow-0">
-          <Text
-            str="---- Blocks Remaining Until the Period Sale Ends"
-            className="text-4xl leading-15"
-          />
-          <SwapForm
-            type={salePhase === 'LastSale' ? 'purchase' : 'participate'}
-            disabled={
-              !isWalletConnecting ||
-              salePhase === 'WithdrawOnly' ||
-              salePhase === 'Closed'
-            }
-          />
+      <div className="grow">
+        {/* Shown when not closed */}
+        <div
+          className={
+            'flex flex-col h-full' +
+            ' ' +
+            (salePhase === 'Closed' ? 'hidden' : '')
+          }
+        >
+          <div className="flex flex-col items-center grow-0">
+            <Text
+              str="---- Blocks Remaining Until the Period Sale Ends"
+              className="text-4xl leading-15"
+            />
+            <SwapForm
+              type={salePhase === 'LastSale' ? 'purchase' : 'participate'}
+              disabled={
+                !isWalletConnecting ||
+                salePhase === 'WithdrawOnly' ||
+                salePhase === 'Closed'
+              }
+            />
+          </div>
+          <div className="flex flex-col items-center justify-center grow">
+            <Text
+              str="You can withdraw ---- ETH"
+              className="text-4xl leading-15"
+            />
+            <Button str="Withdraw ETH" className="w-[560px]" disabled />
+          </div>
         </div>
-        <div className="flex flex-col items-center justify-center grow">
-          <Text
-            str="You can withdraw ---- ETH"
-            className="text-4xl leading-15"
-          />
-          <Button str="Withdraw ETH" className="w-[560px]" disabled />
-        </div>
-      </div>
 
-      {/* Shown when closed */}
-      <div
-        className={
-          'flex flex-col grow justify-center items-center' +
-          ' ' +
-          (salePhase === 'Closed' ? '' : 'hidden')
-        }
-      >
-        <Text
-          str="ALL SALES HAS BEEN ALREADY FINISHED"
-          className="text-[4rem] leading-[6.75rem]"
-        />
+        {/* Shown when closed */}
+        <div
+          className={
+            'flex flex-col grow justify-center items-center' +
+            ' ' +
+            (salePhase === 'Closed' ? '' : 'hidden')
+          }
+        >
+          <Text
+            str="ALL SALES HAS BEEN ALREADY FINISHED"
+            className="text-[4rem] leading-[6.75rem]"
+          />
+        </div>
       </div>
     </div>
   )
