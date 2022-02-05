@@ -15,7 +15,7 @@ const Home: NextPage = () => {
   const closeWalletMenu = () => setIsWalletMenuShown(false)
 
   return (
-    <div className="relative flex flex-col h-full bg-white-pink">
+    <div className="relative flex h-full flex-col bg-white-pink">
       <Head>
         <title>Token name here</title>
       </Head>
@@ -23,14 +23,14 @@ const Home: NextPage = () => {
       {/* Wallet Menu Modal */}
       <div
         className={
-          'absolute z-50 flex flex-row items-center justify-center w-full h-full bg-blue-black/25 cursor-pointer transition-visibility duration-300' +
+          'absolute z-50 flex h-full w-full cursor-pointer flex-row items-center justify-center bg-blue-black/25 transition-visibility duration-300' +
           ' ' +
           (isWalletMenuShown ? '' : 'invisible opacity-0')
         }
         onClick={closeWalletMenu}
       >
         <div
-          className="py-5 bg-white rounded-3xl"
+          className="rounded-3xl bg-white py-5"
           onClick={(e) => e.stopPropagation()}
         >
           <div
@@ -51,7 +51,7 @@ const Home: NextPage = () => {
       </div>
 
       {/* Header */}
-      <header className="flex flex-row items-center justify-between px-12 grow-0 font">
+      <header className="flex grow-0 flex-row items-center justify-between px-12 font">
         <Button
           hidden
           str={isWalletConnecting ? 'Disconnect Wallet' : 'Connect Wallet'}
@@ -70,12 +70,12 @@ const Home: NextPage = () => {
         {/* Shown when not closed */}
         <div
           className={
-            'flex flex-col h-full' +
+            'flex h-full flex-col' +
             ' ' +
             (salePhase === 'Closed' ? 'hidden' : '')
           }
         >
-          <div className="flex flex-col items-center grow-0">
+          <div className="flex grow-0 flex-col items-center">
             <Text
               str="---- Blocks Remaining Until the Period Sale Ends"
               className="text-4xl leading-15"
@@ -89,7 +89,7 @@ const Home: NextPage = () => {
               }
             />
           </div>
-          <div className="flex flex-col items-center justify-center grow">
+          <div className="flex grow flex-col items-center justify-center">
             <Text
               str="You can withdraw ---- ETH"
               className="text-4xl leading-15"
@@ -101,7 +101,7 @@ const Home: NextPage = () => {
         {/* Shown when closed */}
         <div
           className={
-            'flex flex-col grow justify-center items-center' +
+            'flex grow flex-col items-center justify-center' +
             ' ' +
             (salePhase === 'Closed' ? '' : 'hidden')
           }
@@ -128,7 +128,7 @@ const Button: React.FC<ButtonProps> = (props) => {
   return (
     <button
       className={
-        'font px-[42px] text-white-pink rounded-3xl text-4xl leading-15 drop-shadow' +
+        'rounded-3xl px-[42px] font text-4xl leading-15 text-white-pink drop-shadow' +
         ' ' +
         (props.className ? props.className : '') +
         ' ' +
@@ -173,7 +173,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = (props) => {
   return (
     <div
       className={
-        'flex flex-row items-center justify-evenly rounded-3xl bg-white-pink drop-shadow w-[688px] py-1.5 outline-[3.3px] hover:outline hover:outline-red-pink' +
+        'flex w-[688px] flex-row items-center justify-evenly rounded-3xl bg-white-pink py-1.5 outline-[3.3px] drop-shadow hover:outline hover:outline-red-pink' +
         ' ' +
         (props.hidden ? 'invisible' : '') +
         ' ' +
@@ -194,14 +194,14 @@ const CurrencyInput: React.FC<CurrencyInputProps> = (props) => {
       </div>
       <input
         type="text"
-        className="text-5xl bg-transparent font grow text-blue-black/80 max-w-[460px] focus:outline-none"
+        className="max-w-[460px] grow bg-transparent font text-5xl text-blue-black/80 focus:outline-none"
         defaultValue="437847323"
         onFocus={() => setIsBeingFocused(true)}
         onBlur={() => setIsBeingFocused(false)}
       />
       <Text
         str={props.unit === 'ETH' ? 'ETH' : 'TKN'}
-        className="text-5xl grow-0"
+        className="grow-0 text-5xl"
       />
     </div>
   )
@@ -236,7 +236,7 @@ const SwapForm: React.FC<SwapFormProps> = (props) => {
       {/* gray overlay */}
       <div
         className={
-          'absolute z-10 flex flex-col items-center px-10 py-10 bg-blue-black/25 rounded-3xl' +
+          'absolute z-10 flex flex-col items-center rounded-3xl bg-blue-black/25 px-10 py-10' +
           ' ' +
           (props.disabled ? '' : 'invisible')
         }
@@ -248,7 +248,7 @@ const SwapForm: React.FC<SwapFormProps> = (props) => {
         <Button str="Participate" className="w-[560px]" disabled hidden />
       </div>
 
-      <div className="flex flex-col items-center px-10 py-10 bg-white rounded-3xl drop-shadow">
+      <div className="flex flex-col items-center rounded-3xl bg-white px-10 py-10 drop-shadow">
         <CurrencyInput unit="ETH" />
         <DownArrow />
         <CurrencyInput unit="TKN" />
