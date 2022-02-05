@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 
 import { Button } from '../components/Button'
+import { DownArrow } from '../components/DownArrow'
 import { Text } from '../components/Text'
 
 type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
@@ -158,24 +159,6 @@ const CurrencyInput: React.FC<CurrencyInputProps> = (props) => {
       <Text
         str={props.unit === 'ETH' ? 'ETH' : 'TKN'}
         className="grow-0 text-5xl"
-      />
-    </div>
-  )
-}
-
-interface DownArrowProps {
-  hidden?: boolean
-}
-
-const DownArrow: React.FC<DownArrowProps> = (props) => {
-  return (
-    <div className={'-my-1' + ' ' + (props.hidden ? 'invisible' : '')}>
-      <Image
-        src="/down-arrow.svg"
-        height="43"
-        width="43"
-        alt="down arrow"
-        priority
       />
     </div>
   )
