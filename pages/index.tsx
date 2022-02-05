@@ -4,8 +4,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 
 import { Button } from '../components/Button'
-import { CurrencyInput } from '../components/CurrencyInput'
-import { DownArrow } from '../components/DownArrow'
+import { SwapForm } from '../components/SwapForm'
 import { Text } from '../components/Text'
 
 type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
@@ -115,44 +114,6 @@ const Home: NextPage = () => {
             className="text-[4rem] leading-[6.75rem]"
           />
         </div>
-      </div>
-    </div>
-  )
-}
-
-interface SwapFormProps {
-  disabled?: boolean
-  type: 'participate' | 'purchase'
-}
-
-const SwapForm: React.FC<SwapFormProps> = (props) => {
-  return (
-    <div className="relative">
-      {/* gray overlay */}
-      <div
-        className={
-          'absolute z-10 flex flex-col items-center rounded-3xl bg-blue-black/25 px-10 py-10' +
-          ' ' +
-          (props.disabled ? '' : 'invisible')
-        }
-      >
-        <CurrencyInput unit="ETH" hidden />
-        <DownArrow hidden />
-        <CurrencyInput unit="TKN" hidden />
-        <DownArrow hidden />
-        <Button str="Participate" className="w-[560px]" disabled hidden />
-      </div>
-
-      <div className="flex flex-col items-center rounded-3xl bg-white px-10 py-10 drop-shadow">
-        <CurrencyInput unit="ETH" />
-        <DownArrow />
-        <CurrencyInput unit="TKN" />
-        <DownArrow hidden />
-        <Button
-          str={props.type === 'participate' ? 'Participate' : 'Purchase'}
-          className="w-[560px]"
-          disabled={props.disabled}
-        />
       </div>
     </div>
   )
