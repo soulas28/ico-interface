@@ -1,8 +1,8 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import type { MouseEventHandler } from 'react'
 import { useState } from 'react'
+import { Button } from '../components/Button'
 
 type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
 
@@ -113,35 +113,6 @@ const Home: NextPage = () => {
         </div>
       </div>
     </div>
-  )
-}
-
-interface ButtonProps {
-  hidden?: boolean
-  str: string
-  className?: string
-  disabled?: boolean
-  onClick?: MouseEventHandler<HTMLButtonElement>
-}
-
-const Button: React.FC<ButtonProps> = (props) => {
-  return (
-    <button
-      className={
-        'rounded-3xl px-[42px] font text-4xl leading-15 text-white-pink drop-shadow' +
-        ' ' +
-        (props.className ? props.className : '') +
-        ' ' +
-        (props.hidden ? 'invisible' : '') +
-        ' ' +
-        (props.disabled ? 'bg-blue-black/50' : 'bg-red-pink')
-      }
-      value="test"
-      onClick={props.onClick}
-      disabled={props.disabled}
-    >
-      {props.str}
-    </button>
   )
 }
 
