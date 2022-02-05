@@ -4,9 +4,12 @@ import Image from 'next/image'
 import type { MouseEventHandler } from 'react'
 import { useState } from 'react'
 
+type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
+
 const Home: NextPage = () => {
   const [isWalletMenuShown, setIsWalletMenuShown] = useState(false)
-  const [isWalletConnected, setIsWalletConnected] = useState(false)
+  const [isWalletConnecting, setIsWalletConnecting] = useState(false)
+  const [salePhase, setSalePhase] = useState<PhaseType>('NormalSale')
 
   const openWalletMenu = () => setIsWalletMenuShown(true)
   const closeWalletMenu = () => setIsWalletMenuShown(false)
@@ -33,7 +36,7 @@ const Home: NextPage = () => {
           <div
             className="p-8"
             onClick={() => {
-              setIsWalletConnected(true)
+              setIsWalletConnecting(true)
               closeWalletMenu()
             }}
           >
@@ -51,25 +54,37 @@ const Home: NextPage = () => {
       <header className="flex flex-row items-center justify-between px-12 grow-0 font">
         <Button
           hidden
-          str={isWalletConnected ? 'Disconnect Wallet' : 'Connect Wallet'}
+          str={isWalletConnecting ? 'Disconnect Wallet' : 'Connect Wallet'}
         />
         <h1 className="h-[6.75rem] text-[4rem] text-blue-black">Token Logo</h1>
         <Button
-          str={isWalletConnected ? 'Disconnect Wallet' : 'Connect Wallet'}
+          str={isWalletConnecting ? 'Disconnect Wallet' : 'Connect Wallet'}
           onClick={() =>
-            isWalletConnected ? setIsWalletConnected(false) : openWalletMenu()
+            isWalletConnecting ? setIsWalletConnecting(false) : openWalletMenu()
           }
         />
       </header>
 
       {/* Main Contents */}
-      <div className="flex flex-col grow">
+      {/* Shown when not closed */}
+      <div
+        className={
+          'flex flex-col grow' + ' ' + (salePhase === 'Closed' ? 'hidden' : '')
+        }
+      >
         <div className="flex flex-col items-center grow-0">
           <Text
             str="---- Blocks Remaining Until the Period Sale Ends"
             className="text-4xl leading-15"
           />
-          <SwapForm type="participate" disabled={!isWalletConnected} />
+          <SwapForm
+            type={salePhase === 'LastSale' ? 'purchase' : 'participate'}
+            disabled={
+              !isWalletConnecting ||
+              salePhase === 'WithdrawOnly' ||
+              salePhase === 'Closed'
+            }
+          />
         </div>
         <div className="flex flex-col items-center justify-center grow">
           <Text
@@ -78,6 +93,20 @@ const Home: NextPage = () => {
           />
           <Button str="Withdraw ETH" className="w-[560px]" disabled />
         </div>
+      </div>
+
+      {/* Shown when closed */}
+      <div
+        className={
+          'flex flex-col grow justify-center items-center' +
+          ' ' +
+          (salePhase === 'Closed' ? '' : 'hidden')
+        }
+      >
+        <Text
+          str="ALL SALES HAS BEEN ALREADY FINISHED"
+          className="text-[4rem] leading-[6.75rem]"
+        />
       </div>
     </div>
   )
