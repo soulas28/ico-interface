@@ -2,7 +2,9 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useState } from 'react'
+
 import { Button } from '../components/Button'
+import { Text } from '../components/Text'
 
 type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
 
@@ -113,23 +115,6 @@ const Home: NextPage = () => {
         </div>
       </div>
     </div>
-  )
-}
-
-interface TextProps {
-  str: string
-  className?: string
-}
-
-const Text: React.FC<TextProps> = (props) => {
-  return (
-    <p
-      className={
-        'font text-blue-black' + ' ' + (props.className ? props.className : '')
-      }
-    >
-      {props.str}
-    </p>
   )
 }
 
