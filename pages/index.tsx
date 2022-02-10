@@ -39,6 +39,7 @@ const Home: NextPage = () => {
           <div
             className="p-8"
             onClick={() => {
+              //TODO: Connect to wallet
               setIsWalletConnecting(true)
               closeWalletMenu()
             }}
