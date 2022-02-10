@@ -11,6 +11,8 @@
     "test": "echo 'no test here yet'"
   },
   "dependencies": {
+    "@web3-react/core": "^6.1.9",
+    "@web3-react/metamask": "^8.0.0-beta.0",
     "next": "12.0.8",
     "react": "17.0.2",
     "react-dom": "17.0.2"
