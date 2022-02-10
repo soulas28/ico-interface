@@ -13,9 +13,8 @@ type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
 
 const Home: NextPage = () => {
   const [isWalletMenuShown, setIsWalletMenuShown] = useState(false)
-  const [isWalletConnecting, setIsWalletConnecting] = useState(false)
   const [salePhase, setSalePhase] = useState<PhaseType>('NormalSale')
-  const { activate } = useWeb3React()
+  const { activate, active, deactivate } = useWeb3React()
 
   const openWalletMenu = () => setIsWalletMenuShown(true)
   const closeWalletMenu = () => setIsWalletMenuShown(false)
@@ -45,7 +44,6 @@ const Home: NextPage = () => {
               //TODO: Connect to wallet
               //TODO: ERROR Handling
               await activate(injected)
-              setIsWalletConnecting(true)
               closeWalletMenu()
             }}
           >
@@ -61,16 +59,11 @@ const Home: NextPage = () => {
 
       {/* Header */}
       <header className="flex grow-0 flex-row items-center justify-between px-12 font">
-        <Button
-          hidden
-          str={isWalletConnecting ? 'Disconnect Wallet' : 'Connect Wallet'}
-        />
+        <Button hidden str={active ? 'Disconnect Wallet' : 'Connect Wallet'} />
         <h1 className="h-[6.75rem] text-[4rem] text-blue-black">Token Logo</h1>
         <Button
-          str={isWalletConnecting ? 'Disconnect Wallet' : 'Connect Wallet'}
-          onClick={() =>
-            isWalletConnecting ? setIsWalletConnecting(false) : openWalletMenu()
-          }
+          str={active ? 'Disconnect Wallet' : 'Connect Wallet'}
+          onClick={() => (active ? deactivate() : openWalletMenu())}
         />
       </header>
 
@@ -92,7 +85,7 @@ const Home: NextPage = () => {
             <SwapForm
               type={salePhase === 'LastSale' ? 'purchase' : 'participate'}
               disabled={
-                !isWalletConnecting ||
+                !active ||
                 salePhase === 'WithdrawOnly' ||
                 salePhase === 'Closed'
               }

@@ -1,5 +1,5 @@
 import { Web3ReactProvider } from '@web3-react/core'
-import ethers from 'ethers'
+import { ethers } from 'ethers'
 import type { AppProps } from 'next/app'
 
 import '../styles/globals.css'
