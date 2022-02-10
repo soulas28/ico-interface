@@ -1,8 +1,12 @@
 import { useWeb3React } from '@web3-react/core'
+import {
+  NoEthereumProviderError,
+  UserRejectedRequestError,
+} from '@web3-react/injected-connector'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Button } from '../components/Button'
 import { SwapForm } from '../components/SwapForm'
@@ -14,7 +18,7 @@ type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
 const Home: NextPage = () => {
   const [isWalletMenuShown, setIsWalletMenuShown] = useState(false)
   const [salePhase, setSalePhase] = useState<PhaseType>('NormalSale')
-  const { activate, active, deactivate } = useWeb3React()
+  const { activate, active, deactivate, error } = useWeb3React()
 
   const openWalletMenu = () => setIsWalletMenuShown(true)
   const closeWalletMenu = () => setIsWalletMenuShown(false)
@@ -41,8 +45,6 @@ const Home: NextPage = () => {
           <div
             className="p-8"
             onClick={async () => {
-              //TODO: Connect to wallet
-              //TODO: ERROR Handling
               await activate(injected)
               closeWalletMenu()
             }}
