@@ -18,7 +18,7 @@ type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
 const Home: NextPage = () => {
   const [isWalletMenuShown, setIsWalletMenuShown] = useState(false)
   const [salePhase, setSalePhase] = useState<PhaseType>('NormalSale')
-  const { activate, active, deactivate, error } = useWeb3React()
+  const { activate, active, deactivate } = useWeb3React()
 
   const openWalletMenu = () => setIsWalletMenuShown(true)
   const closeWalletMenu = () => setIsWalletMenuShown(false)
