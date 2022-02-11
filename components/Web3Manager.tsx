@@ -12,7 +12,6 @@ export function Web3Manager() {
   const { activate, error, active } = useWeb3React()
 
   // web3-react error handling here
-  //TODO: add all error handling here
   useEffect(() => {
     if (error) {
       if (error instanceof UserRejectedRequestError)
@@ -21,7 +20,11 @@ export function Web3Manager() {
         alert(
           'You seems not to have any wallet. Please install metamask first.'
         )
-      else console.log(error)
+      else if (error instanceof UnsupportedChainIdError)
+        alert('Unsupported chainId.')
+      else {
+        if (process.env.NODE_ENV !== 'production') console.error(error)
+      }
     }
   }, [error])
 
