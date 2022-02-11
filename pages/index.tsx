@@ -1,18 +1,24 @@
+import { useWeb3React } from '@web3-react/core'
+import {
+  NoEthereumProviderError,
+  UserRejectedRequestError,
+} from '@web3-react/injected-connector'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Button } from '../components/Button'
 import { SwapForm } from '../components/SwapForm'
 import { Text } from '../components/Text'
+import { injected } from '../lib/connectors/metamask'
 
 type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
 
 const Home: NextPage = () => {
   const [isWalletMenuShown, setIsWalletMenuShown] = useState(false)
-  const [isWalletConnecting, setIsWalletConnecting] = useState(false)
   const [salePhase, setSalePhase] = useState<PhaseType>('NormalSale')
+  const { activate, active, deactivate } = useWeb3React()
 
   const openWalletMenu = () => setIsWalletMenuShown(true)
   const closeWalletMenu = () => setIsWalletMenuShown(false)
@@ -38,9 +44,8 @@ const Home: NextPage = () => {
         >
           <div
             className="p-8"
-            onClick={() => {
-              //TODO: Connect to wallet
-              setIsWalletConnecting(true)
+            onClick={async () => {
+              await activate(injected)
               closeWalletMenu()
             }}
           >
@@ -56,16 +61,11 @@ const Home: NextPage = () => {
 
       {/* Header */}
       <header className="flex grow-0 flex-row items-center justify-between px-12 font">
-        <Button
-          hidden
-          str={isWalletConnecting ? 'Disconnect Wallet' : 'Connect Wallet'}
-        />
+        <Button hidden str={active ? 'Disconnect Wallet' : 'Connect Wallet'} />
         <h1 className="h-[6.75rem] text-[4rem] text-blue-black">Token Logo</h1>
         <Button
-          str={isWalletConnecting ? 'Disconnect Wallet' : 'Connect Wallet'}
-          onClick={() =>
-            isWalletConnecting ? setIsWalletConnecting(false) : openWalletMenu()
-          }
+          str={active ? 'Disconnect Wallet' : 'Connect Wallet'}
+          onClick={() => (active ? deactivate() : openWalletMenu())}
         />
       </header>
 
@@ -87,7 +87,7 @@ const Home: NextPage = () => {
             <SwapForm
               type={salePhase === 'LastSale' ? 'purchase' : 'participate'}
               disabled={
-                !isWalletConnecting ||
+                !active ||
                 salePhase === 'WithdrawOnly' ||
                 salePhase === 'Closed'
               }
