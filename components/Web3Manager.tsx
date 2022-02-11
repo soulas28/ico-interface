@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
+import { UnsupportedChainIdError } from '@web3-react/core'
 import {
   NoEthereumProviderError,
   UserRejectedRequestError,
@@ -15,7 +16,7 @@ export function Web3Manager() {
   useEffect(() => {
     if (error) {
       if (error instanceof UserRejectedRequestError)
-        alert('User rejected request to connect.')
+        alert('User rejected request.')
       else if (error instanceof NoEthereumProviderError)
         alert(
           'You seems not to have any wallet. Please install metamask first.'
