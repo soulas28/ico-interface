@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useState } from 'react'
@@ -11,6 +11,10 @@ import { injected } from '../lib/connectors/metamask'
 
 type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
 
+/**
+ * The main page of the application.
+ * @returns {NextPage}
+ */
 const Home: NextPage = () => {
   const [isWalletMenuShown, setIsWalletMenuShown] = useState(false)
   const [salePhase, setSalePhase] = useState<PhaseType>('NormalSale')
@@ -18,6 +22,7 @@ const Home: NextPage = () => {
 
   const openWalletMenu = () => setIsWalletMenuShown(true)
   const closeWalletMenu = () => setIsWalletMenuShown(false)
+  console.log(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS)
 
   return (
     <div className="relative flex h-full flex-col bg-white-pink">
