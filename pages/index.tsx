@@ -1,12 +1,8 @@
 import { useWeb3React } from '@web3-react/core'
-import {
-  NoEthereumProviderError,
-  UserRejectedRequestError,
-} from '@web3-react/injected-connector'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { Button } from '../components/Button'
 import { SwapForm } from '../components/SwapForm'
