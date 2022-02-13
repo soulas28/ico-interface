@@ -1,15 +1,15 @@
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
-import type { GetServerSideProps, NextPage } from 'next'
+import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { kill } from 'process'
 import { useState } from 'react'
 import useSWR from 'swr'
 
 import { Button } from '../components/Button'
 import { SwapForm } from '../components/SwapForm'
 import { Text } from '../components/Text'
+import { ICO__factory } from '../contract'
 import { injected } from '../lib/connectors/metamask'
 import { ICOContractFetcher } from '../lib/swr-fetchers/ico-contract'
 
@@ -20,16 +20,23 @@ type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
  * @returns {NextPage}
  */
 const Home: NextPage = () => {
+  const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || ''
+  const decimal = ethers.FixedNumber.fromString('1000000000000000000')
+
+  // states
   const [isWalletMenuShown, setIsWalletMenuShown] = useState(false)
   const [salePhase, setSalePhase] = useState<PhaseType>('NormalSale')
-  const { activate, active, deactivate } = useWeb3React()
 
-  // Fetch data from blockchain
+  // web3-react
+  const { activate, active, deactivate, library: wallet } = useWeb3React()
+
+  // Fetch data from blockchain through infura.io (without metamask)
   const { data: periodBlock } = useSWR(['periodBlock'], ICOContractFetcher)
   const { data: numOfPeriods } = useSWR(['numOfPeriods'], ICOContractFetcher)
   const { data: deployedBlock } = useSWR(['deployedBlock'], ICOContractFetcher)
   const { data: rate } = useSWR(['rate'], ICOContractFetcher)
 
+  // convert raw data to useful shape
   const periodSaleRemainingBlocks =
     periodBlock && numOfPeriods && deployedBlock
       ? ethers.FixedNumber.fromString(periodBlock.toString() || '0')
@@ -43,9 +50,43 @@ const Home: NextPage = () => {
           .split('.')[0]
       : '----'
 
+  // control wallet menu
   const openWalletMenu = () => setIsWalletMenuShown(true)
   const closeWalletMenu = () => setIsWalletMenuShown(false)
-  console.log(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS)
+
+  // convert between token and eth
+  const ethToToken = async (eth: string) => {
+    if (!eth) return ''
+    const contract = ICO__factory.connect(contractAddress, wallet)
+    return ethers.FixedNumber.fromString(
+      (
+        await contract.ETHToToken(
+          ethers.FixedNumber.fromString(eth)
+            .mulUnsafe(decimal)
+            .toString()
+            .split('.')[0]
+        )
+      ).toString()
+    )
+      .divUnsafe(decimal)
+      .toString()
+  }
+  const tokenToEth = async (token: string) => {
+    if (!token) return ''
+    const contract = ICO__factory.connect(contractAddress, wallet)
+    return ethers.FixedNumber.fromString(
+      (
+        await contract.TokenToETH(
+          ethers.FixedNumber.fromString(token)
+            .mulUnsafe(decimal)
+            .toString()
+            .split('.')[0]
+        )
+      ).toString()
+    )
+      .divUnsafe(decimal)
+      .toString()
+  }
 
   return (
     <div className="relative flex h-full flex-col bg-white-pink">
@@ -131,6 +172,8 @@ const Home: NextPage = () => {
                 salePhase === 'WithdrawOnly' ||
                 salePhase === 'Closed'
               }
+              ethToToken={ethToToken}
+              tokenToEth={tokenToEth}
             />
           </div>
           <div className="flex grow flex-col items-center justify-center">

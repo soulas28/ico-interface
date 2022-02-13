@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { useState } from 'react'
+import type { FormEventHandler } from 'react'
 
 import { Text } from './Text'
 
@@ -11,6 +12,10 @@ export interface CurrencyInputProps {
   hidden?: boolean
   /** additional class name for component (use for tailwind styling) */
   className?: string
+  /** function to be called on Input. */
+  onInput?: FormEventHandler<HTMLInputElement>
+  /** value of input form. */
+  value?: string
 }
 
 /** Component to display currency input form */
@@ -41,9 +46,10 @@ export const CurrencyInput: React.FC<CurrencyInputProps> = (props) => {
       <input
         type="text"
         className="max-w-[460px] grow bg-transparent font text-5xl text-blue-black/80 focus:outline-none"
-        defaultValue="437847323"
         onFocus={() => setIsBeingFocused(true)}
         onBlur={() => setIsBeingFocused(false)}
+        onInput={props.onInput}
+        value={props.value}
       />
       <Text
         str={props.unit === 'ETH' ? 'ETH' : 'TKN'}
