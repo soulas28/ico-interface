@@ -53,6 +53,11 @@ const Home: NextPage = () => {
     },
     ICOContractFetcher
   )
+  const { data: withdrawal } = useSWR(
+    ['withdrawal', account],
+    ICOContractFetcher
+  )
+
   // update size of participation array to be loaded
   useEffect(() => {
     if (numOfPeriods) {
@@ -74,12 +79,11 @@ const Home: NextPage = () => {
           .split('.')[0]
       : '----'
 
-  // check there's some withdrawable tokensd
+  // check if there's some withdrawable tokens
   useEffect(() => {
     setIsTokenWithdrawable(false)
 
     if (participations) {
-      console.log(participations)
       participations.forEach((participation) => {
         if (participation.toString()) setIsTokenWithdrawable(true)
       })
@@ -245,8 +249,23 @@ const Home: NextPage = () => {
               disabled={isTokenWithdrawable}
             />
             <div className="flex flex-col items-center justify-center">
-              <Text str="You can withdraw ---- ETH" className="text-3xl" />
-              <Button str="Withdraw ETH" className="w-[560px]" disabled />
+              <Text
+                str={
+                  'You can withdraw ' +
+                  ethers.FixedNumber.fromString(
+                    (withdrawal as BigNumber).toString()
+                  )
+                    .divUnsafe(decimal)
+                    .toString() +
+                  ' ETH'
+                }
+                className="text-3xl"
+              />
+              <Button
+                str="Withdraw ETH"
+                className="w-[560px]"
+                disabled={(withdrawal as BigNumber).eq(0)}
+              />
             </div>
           </div>
         </div>

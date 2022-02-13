@@ -15,16 +15,17 @@ const provider = new ethers.providers.JsonRpcProvider(providerURL)
  * @param arg1 - custom arg 1.
  * @param arg2 - custom arg 2.
  *
- * @remarks when type is "deployedBlock", arg1 is not used.
- * @remarks when type is "name", arg1 is not used.
- * @remarks when type is "symbol", arg1 is not used.
- * @remarks when type is "periodBlock", arg1 is not used.
- * @remarks when type is "numOfPeriods", arg1 is not used.
- * @remarks when type is "unitPeriodBalance", arg1 is not used.
- * @remarks when type is "rate", arg1 is not used.
- * @remarks when type is "withdrawLimit", arg1 is not used.
- * @remarks when type is "currentPeriod", arg1 is not used.
+ * @remarks when type is "deployedBlock", args are not used.
+ * @remarks when type is "name", args are not used.
+ * @remarks when type is "symbol", args are not used.
+ * @remarks when type is "periodBlock", args are not used.
+ * @remarks when type is "numOfPeriods", args are not used.
+ * @remarks when type is "unitPeriodBalance", args are not used.
+ * @remarks when type is "rate", args are not used.
+ * @remarks when type is "withdrawLimit", args are not used.
+ * @remarks when type is "currentPeriod", args are not used.
  * @remarks when type is "participation", arg1 is address and arg2 is period.
+ * @remarks when type is "withdrawal", arg1 is address and arg2 is not used.
  *
  * @returns the data you specified in type.
  */
@@ -42,6 +43,7 @@ export const ICOContractFetcher: Fetcher<
       | 'withdrawLimit'
       | 'currentPeriod'
       | 'participation'
+      | 'withdrawal'
     ),
     any,
     any
@@ -79,6 +81,9 @@ export const ICOContractFetcher: Fetcher<
       break
     case 'participation':
       return contract.participation(arg1, arg2)
+      break
+    case 'withdrawal':
+      return contract.withdrawal(arg1)
       break
   }
 }
