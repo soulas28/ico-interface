@@ -5,6 +5,7 @@ import React from 'react'
 import useSWR from 'swr'
 
 import { injected } from '../lib/connectors/metamask'
+import { ICOContractFetcher } from '../lib/swr-fetchers/ico-contract'
 import { metamaskFetcher } from '../lib/swr-fetchers/metamask'
 import { web3Fetcher } from '../lib/swr-fetchers/web3'
 
@@ -16,8 +17,18 @@ import { web3Fetcher } from '../lib/swr-fetchers/web3'
 const ContractControl: NextPage = () => {
   const { activate, active, deactivate, library: wallet } = useWeb3React()
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS
+
   const { data: account } = useSWR('account', metamaskFetcher)
   const { data: balance } = useSWR([account, 'ethBalance'], web3Fetcher)
+  const { data: tokenName } = useSWR(['name'], ICOContractFetcher)
+  const { data: tokenSymbol } = useSWR(['symbol'], ICOContractFetcher)
+  const { data: numOfPeriods } = useSWR(['numOfPeriods'], ICOContractFetcher)
+  const { data: periodBlock } = useSWR(['periodBlock'], ICOContractFetcher)
+  const { data: unitPeriodBalance } = useSWR(
+    ['unitPeriodBalance'],
+    ICOContractFetcher
+  )
+  const { data: rate } = useSWR(['rate'], ICOContractFetcher)
 
   return (
     <div>
@@ -25,7 +36,7 @@ const ContractControl: NextPage = () => {
       <p className="mb-4">Contract: {contractAddress}</p>
 
       {/* Wallet Connection */}
-      <div>
+      <div className="mb-4">
         <h2 className="text-3xl">Wallet Connect</h2>
         <h3 className="text-xl">
           <span className={active ? 'text-green-500' : 'text-red-500'}>
@@ -36,6 +47,18 @@ const ContractControl: NextPage = () => {
         <p>{balance || '0'} ETH 0 TKN</p>
         <SimpleButton text="connect" onClick={() => activate(injected)} />
         <SimpleButton text="disconnect" onClick={deactivate} />
+      </div>
+
+      <div>
+        <h2 className="text-3xl">Variables</h2>
+
+        <p>
+          {tokenName || 'Name'}({tokenSymbol || 'Symbol'}){' '}
+          {periodBlock?.toString()}blocks/period{' '}
+          {numOfPeriods?.toString() || 'N'}periods{' '}
+          {unitPeriodBalance?.toString() || 'N'}Tokens/period rate:
+          {rate?.toString() || 'N'} owner:Ntkn limit:Nblk
+        </p>
       </div>
     </div>
   )
