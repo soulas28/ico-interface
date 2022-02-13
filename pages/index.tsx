@@ -84,14 +84,14 @@ const Home: NextPage = () => {
     setIsTokenWithdrawable(false)
     if (currentPeriod && (currentPeriod as BigNumber).toNumber() !== 0) {
       if (participations) {
-        participations.forEach((participation) => {
-          if (participation.toString()) setIsTokenWithdrawable(true)
-        })
+        for (let i = 0; i < (currentPeriod as BigNumber).toNumber(); i++) {
+          if (!(participations[i] as BigNumber).eq('0'))
+            setIsTokenWithdrawable(true)
+        }
       }
     }
   }, [participations, currentPeriod])
 
-  console.log(isTokenWithdrawable)
   // calculate current sale phase
   useEffect(() => {
     if (
