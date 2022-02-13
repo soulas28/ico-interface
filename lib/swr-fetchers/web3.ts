@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from 'ethers'
+import { ethers } from 'ethers'
 import type { Fetcher } from 'swr'
 
 // passing provider as props is forbidden. It causes problem with ethers.js. The reason is unknown yet.
