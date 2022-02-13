@@ -85,6 +85,7 @@ const Home: NextPage = () => {
               str="---- Blocks Remaining Until the Period Sale Ends"
               className="text-4xl leading-15"
             />
+            <Text str="1 ETH = 1 TKN" className="text-4xl leading-15" />
             <SwapForm
               type={salePhase === 'LastSale' ? 'purchase' : 'participate'}
               disabled={
@@ -95,10 +96,7 @@ const Home: NextPage = () => {
             />
           </div>
           <div className="flex grow flex-col items-center justify-center">
-            <Text
-              str="You can withdraw ---- ETH"
-              className="text-4xl leading-15"
-            />
+            <Text str="You can withdraw ---- ETH" className="text-3xl" />
             <Button str="Withdraw ETH" className="w-[560px]" disabled />
           </div>
         </div>
