@@ -1,9 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
+import type { BigNumber } from 'ethers'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 
 import { Button } from '../components/Button'
@@ -12,6 +13,7 @@ import { Text } from '../components/Text'
 import { ICO__factory } from '../contract'
 import { injected } from '../lib/connectors/metamask'
 import { ICOContractFetcher } from '../lib/swr-fetchers/ico-contract'
+import { web3Fetcher } from '../lib/swr-fetchers/web3'
 
 type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
 
@@ -35,6 +37,9 @@ const Home: NextPage = () => {
   const { data: numOfPeriods } = useSWR(['numOfPeriods'], ICOContractFetcher)
   const { data: deployedBlock } = useSWR(['deployedBlock'], ICOContractFetcher)
   const { data: rate } = useSWR(['rate'], ICOContractFetcher)
+  const { data: withdrawLimit } = useSWR(['withdrawLimit'], ICOContractFetcher)
+  const { data: currentPeriod } = useSWR(['currentPeriod'], ICOContractFetcher)
+  const { data: currentBlock } = useSWR(['blockNumber'], web3Fetcher)
 
   // convert raw data to useful shape
   const periodSaleRemainingBlocks =
@@ -49,6 +54,31 @@ const Home: NextPage = () => {
           .toString()
           .split('.')[0]
       : '----'
+
+  // calculate current sale phase
+  useEffect(() => {
+    if (
+      deployedBlock &&
+      currentPeriod &&
+      numOfPeriods &&
+      withdrawLimit &&
+      currentBlock
+    ) {
+      const deployedBlockInNumber = (deployedBlock as BigNumber).toNumber()
+      const currentPeriodInNumber = (currentPeriod as BigNumber).toNumber()
+      const numOfPeriodsInNumber = (numOfPeriods as BigNumber).toNumber()
+      const withdrawLimitInNumber = (withdrawLimit as BigNumber).toNumber()
+      const currentBlockInNumber = currentBlock as number
+
+      if (deployedBlockInNumber + withdrawLimitInNumber <= currentBlockInNumber)
+        setSalePhase('Closed')
+      else if (currentPeriodInNumber < numOfPeriodsInNumber)
+        setSalePhase('NormalSale')
+      else if (currentPeriodInNumber === numOfPeriodsInNumber)
+        setSalePhase('LastSale')
+      else setSalePhase('WithdrawOnly')
+    }
+  }, [deployedBlock, currentPeriod, numOfPeriods, withdrawLimit, currentBlock])
 
   // control wallet menu
   const openWalletMenu = () => setIsWalletMenuShown(true)

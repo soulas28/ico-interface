@@ -1,20 +1,31 @@
 import { ethers } from 'ethers'
 import type { Fetcher } from 'swr'
 
-// passing provider as props is forbidden. It causes problem with ethers.js. The reason is unknown yet.
-
 /**
- * Fetcher to get an account's balance.
- * @param address - address of target account
- * @returns the balance of target account
+ * Fetcher to get blockchain info.
+ * @param type - type of information you want.
+ * @param arg1 - custom arg 1.
+ *
+ * @remarks when type is "ethBalance", arg1 is account's address.
+ * @remarks when type is "currentBlock", arg1 is not used.
+ *
+ * @returns the data you specified in type.
  */
-export const web3Fetcher: Fetcher<string, [string, 'ethBalance']> = (
-  address
-) => {
-  if (!address) return '0'
+export const web3Fetcher: Fetcher<
+  string | number,
+  ['ethBalance' | 'blockNumber', string]
+> = (type, arg1) => {
+  if (!type) return ''
   const provider = new ethers.providers.JsonRpcProvider(
     process.env.NEXT_PUBLIC_PROVIDER_URL
   )
-  const balance = provider.getBalance(address).then((res) => res.toString())
-  return balance
+  switch (type) {
+    case 'ethBalance':
+      if (!arg1) return ''
+      return provider.getBalance(arg1).then((res) => res.toString())
+      break
+    case 'blockNumber':
+      return provider.getBlockNumber()
+      break
+  }
 }

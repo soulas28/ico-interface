@@ -19,7 +19,7 @@ const ContractControl: NextPage = () => {
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS
 
   const { data: account } = useSWR('account', metamaskFetcher)
-  const { data: balance } = useSWR([account, 'ethBalance'], web3Fetcher)
+  const { data: balance } = useSWR(['ethBalance', account], web3Fetcher)
   const { data: tokenName } = useSWR(['name'], ICOContractFetcher)
   const { data: tokenSymbol } = useSWR(['symbol'], ICOContractFetcher)
   const { data: numOfPeriods } = useSWR(['numOfPeriods'], ICOContractFetcher)
