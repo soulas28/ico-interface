@@ -15,18 +15,15 @@ import { web3Fetcher } from '../lib/swr-fetchers/web3'
  * @returns Next.js Page
  */
 const ContractControl: NextPage = () => {
-  const { activate, active, deactivate, library: provider } = useWeb3React()
-  const address = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS
+  const { activate, active, deactivate, library: wallet } = useWeb3React()
+  const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS
   const { data: account } = useSWR('account', metamaskFetcher)
-  const { data: balance } = useSWR(
-    [provider, account, 'ethBalance'],
-    web3Fetcher
-  )
+  const { data: balance } = useSWR([account, 'ethBalance'], web3Fetcher)
 
   return (
     <div>
       <h1 className="text-4xl mb-4">Contract Control</h1>
-      <p className="mb-4">Contract: {address}</p>
+      <p className="mb-4">Contract: {contractAddress}</p>
 
       {/* Wallet Connection */}
       <div>
