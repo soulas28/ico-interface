@@ -1,4 +1,4 @@
-import { BigNumberish, ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import type { Fetcher } from 'swr'
 
 import { ICO__factory } from '../../contract/factories/ICO__factory'
@@ -13,15 +13,17 @@ const provider = () => new ethers.providers.JsonRpcProvider(providerURL)
  * @param type - type of information you want.
  * @param arg1 - custom arg 1.
  *
+ * @remarks when type is "deployedBlock", arg1 is not used.
  * @remarks when type is "name", arg1 is not used.
  * @remarks when type is "symbol", arg1 is not used.
  * @remarks when type is "periodBlock", arg1 is not used.
  * @remarks when type is "numOfPeriods", arg1 is not used.
  */
 export const ICOContractFetcher: Fetcher<
-  string | BigNumberish,
+  string | BigNumber,
   [
     (
+      | 'deployedBlock'
       | 'name'
       | 'symbol'
       | 'periodBlock'
@@ -35,6 +37,9 @@ export const ICOContractFetcher: Fetcher<
   if (!contractAddress) return ''
   const contract = ICO__factory.connect(contractAddress, provider())
   switch (type) {
+    case 'deployedBlock':
+      return contract.deployedBlock()
+      break
     case 'name':
       return contract.name()
       break

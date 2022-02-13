@@ -1,13 +1,17 @@
 import { useWeb3React } from '@web3-react/core'
+import { ethers } from 'ethers'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import { kill } from 'process'
 import { useState } from 'react'
+import useSWR from 'swr'
 
 import { Button } from '../components/Button'
 import { SwapForm } from '../components/SwapForm'
 import { Text } from '../components/Text'
 import { injected } from '../lib/connectors/metamask'
+import { ICOContractFetcher } from '../lib/swr-fetchers/ico-contract'
 
 type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
 
@@ -19,6 +23,25 @@ const Home: NextPage = () => {
   const [isWalletMenuShown, setIsWalletMenuShown] = useState(false)
   const [salePhase, setSalePhase] = useState<PhaseType>('NormalSale')
   const { activate, active, deactivate } = useWeb3React()
+
+  // Fetch data from blockchain
+  const { data: periodBlock } = useSWR(['periodBlock'], ICOContractFetcher)
+  const { data: numOfPeriods } = useSWR(['numOfPeriods'], ICOContractFetcher)
+  const { data: deployedBlock } = useSWR(['deployedBlock'], ICOContractFetcher)
+  const { data: rate } = useSWR(['rate'], ICOContractFetcher)
+
+  const periodSaleRemainingBlocks =
+    periodBlock && numOfPeriods && deployedBlock
+      ? ethers.FixedNumber.fromString(periodBlock.toString() || '0')
+          .mulUnsafe(
+            ethers.FixedNumber.fromString(numOfPeriods.toString() || '0')
+          )
+          .subUnsafe(
+            ethers.FixedNumber.fromString(deployedBlock.toString() || '0')
+          )
+          .toString()
+          .split('.')[0]
+      : '----'
 
   const openWalletMenu = () => setIsWalletMenuShown(true)
   const closeWalletMenu = () => setIsWalletMenuShown(false)
@@ -82,10 +105,25 @@ const Home: NextPage = () => {
         >
           <div className="flex grow-0 flex-col items-center">
             <Text
-              str="---- Blocks Remaining Until the Period Sale Ends"
+              str={
+                periodSaleRemainingBlocks +
+                ' ' +
+                'Blocks Remaining Until the Period Sale Ends'
+              }
               className="text-4xl leading-15"
             />
-            <Text str="1 ETH = 1 TKN" className="text-4xl leading-15" />
+            <Text
+              str={
+                '1.0 ETH = ' +
+                ethers.FixedNumber.fromString('0.01')
+                  .mulUnsafe(
+                    ethers.FixedNumber.fromString(rate?.toString() || '0')
+                  )
+                  .toString() +
+                ' TKN'
+              }
+              className="text-4xl leading-15"
+            />
             <SwapForm
               type={salePhase === 'LastSale' ? 'purchase' : 'participate'}
               disabled={
