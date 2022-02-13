@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import type { FormEventHandler } from 'react'
 
 import { Button } from './Button'
@@ -15,6 +15,8 @@ export interface SwapFormProps {
   ethToToken: (eth: string) => Promise<string>
   /** function to convert token to eth. */
   tokenToEth: (token: string) => Promise<string>
+  /** function called when submitted */
+  onSubmit: (eth: string) => void
 }
 
 /** component to display the form for currency swapping */
@@ -28,11 +30,7 @@ export const SwapForm: React.FC<SwapFormProps> = (props) => {
       setEth(value)
       setTkn(await props.ethToToken(value))
     }
-    console.log('eth input')
   }
-  // useMemo(async () => {
-  //   setTkn(await props.ethToToken(eth))
-  // }, [props, eth])
 
   const onTknUpdated: FormEventHandler<HTMLInputElement> = async (e) => {
     const value = e.currentTarget.value
@@ -70,6 +68,7 @@ export const SwapForm: React.FC<SwapFormProps> = (props) => {
           str={props.type === 'participate' ? 'Participate' : 'Purchase'}
           className="w-[560px]"
           disabled={props.disabled}
+          onClick={() => props.onSubmit(eth)}
         />
       </div>
     </div>

@@ -1,9 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
 import type { NextPage } from 'next'
-import type { MouseEventHandler } from 'react'
+import { MouseEventHandler, useState } from 'react'
 import React from 'react'
 import useSWR from 'swr'
 
+import { ICO__factory } from '../contract'
 import { injected } from '../lib/connectors/metamask'
 import { ICOContractFetcher } from '../lib/swr-fetchers/ico-contract'
 import { metamaskFetcher } from '../lib/swr-fetchers/metamask'
@@ -17,6 +18,8 @@ import { web3Fetcher } from '../lib/swr-fetchers/web3'
 const ContractControl: NextPage = () => {
   const { activate, active, deactivate, library: wallet } = useWeb3React()
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS
+  const [participationAddress, setParticipationAddress] = useState('')
+  const [participationPeriod, setParticipationPeriod] = useState('')
 
   const { data: account } = useSWR('account', metamaskFetcher)
   const { data: balance } = useSWR(['ethBalance', account], web3Fetcher)
@@ -29,6 +32,11 @@ const ContractControl: NextPage = () => {
     ICOContractFetcher
   )
   const { data: rate } = useSWR(['rate'], ICOContractFetcher)
+  const { data: participation } = useSWR(
+    ['participation', participationAddress, participationPeriod],
+    ICOContractFetcher
+  )
+  const { data: currentPeriod } = useSWR(['currentPeriod'], ICOContractFetcher)
 
   return (
     <div>
@@ -49,7 +57,7 @@ const ContractControl: NextPage = () => {
         <SimpleButton text="disconnect" onClick={deactivate} />
       </div>
 
-      <div>
+      <div className="mb-4">
         <h2 className="text-3xl">Variables</h2>
 
         <p>
@@ -59,6 +67,33 @@ const ContractControl: NextPage = () => {
           {unitPeriodBalance?.toString() || 'N'}Tokens/period rate:
           {rate?.toString() || 'N'} owner:Ntkn limit:Nblk
         </p>
+        <br />
+        <p>currentPeriod: {currentPeriod?.toString() || 'N'}</p>
+        <h3 className="text-xl">participations</h3>
+        <p>{participation?.toString() || 'null'}</p>
+        <input
+          type="text"
+          className="border-2 border-black"
+          placeholder="address"
+          onInput={(e) => setParticipationAddress(e.currentTarget.value)}
+        />
+        <input
+          type="text"
+          className="border-2 border-black"
+          placeholder="period"
+          onInput={(e) => setParticipationPeriod(e.currentTarget.value)}
+        />
+      </div>
+      <div>
+        <h2 className="text-3xl">Actions</h2>
+        <SimpleButton
+          text="mine block(ganache only)"
+          onClick={() => {
+            const signer = wallet.getSigner()
+            const contract = ICO__factory.connect(contractAddress || '', signer)
+            contract.approve('0x651b19B9f7fD02767836aF4E3CE22199F959559a', '1')
+          }}
+        />
       </div>
     </div>
   )

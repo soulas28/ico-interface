@@ -67,14 +67,11 @@ const Home: NextPage = () => {
 
   // convert raw data to useful shape
   const periodSaleRemainingBlocks =
-    periodBlock && numOfPeriods && deployedBlock
-      ? ethers.FixedNumber.fromString(periodBlock.toString() || '0')
-          .mulUnsafe(
-            ethers.FixedNumber.fromString(numOfPeriods.toString() || '0')
-          )
-          .subUnsafe(
-            ethers.FixedNumber.fromString(deployedBlock.toString() || '0')
-          )
+    periodBlock && numOfPeriods && deployedBlock && currentBlock
+      ? ethers.FixedNumber.fromString(periodBlock.toString())
+          .mulUnsafe(ethers.FixedNumber.fromString(numOfPeriods.toString()))
+          .addUnsafe(ethers.FixedNumber.fromString(deployedBlock.toString()))
+          .subUnsafe(ethers.FixedNumber.fromString(currentBlock.toString()))
           .toString()
           .split('.')[0]
       : '----'
@@ -91,6 +88,8 @@ const Home: NextPage = () => {
       }
     }
   }, [participations, currentPeriod])
+
+  console.log(participations)
 
   // calculate current sale phase
   useEffect(() => {
@@ -153,6 +152,19 @@ const Home: NextPage = () => {
     )
       .divUnsafe(decimal)
       .toString()
+  }
+
+  // interact contract with ETH
+  const participate = (eth: string) => {
+    if (!eth) return
+    const signer = wallet.getSigner()
+    const contract = ICO__factory.connect(contractAddress, signer)
+    contract.participate({
+      value: ethers.FixedNumber.fromString(eth)
+        .mulUnsafe(decimal)
+        .toString()
+        .split('.')[0],
+    })
   }
 
   return (
@@ -241,6 +253,7 @@ const Home: NextPage = () => {
               }
               ethToToken={ethToToken}
               tokenToEth={tokenToEth}
+              onSubmit={participate}
             />
           </div>
 
