@@ -6,6 +6,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
+import useSWRInfinite from 'swr/infinite'
 
 import { Button } from '../components/Button'
 import { SwapForm } from '../components/SwapForm'
@@ -13,6 +14,7 @@ import { Text } from '../components/Text'
 import { ICO__factory } from '../contract'
 import { injected } from '../lib/connectors/metamask'
 import { ICOContractFetcher } from '../lib/swr-fetchers/ico-contract'
+import { metamaskFetcher } from '../lib/swr-fetchers/metamask'
 import { web3Fetcher } from '../lib/swr-fetchers/web3'
 
 type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
@@ -28,9 +30,13 @@ const Home: NextPage = () => {
   // states
   const [isWalletMenuShown, setIsWalletMenuShown] = useState(false)
   const [salePhase, setSalePhase] = useState<PhaseType>('NormalSale')
+  const [isTokenWithdrawable, setIsTokenWithdrawable] = useState(false)
 
   // web3-react
   const { activate, active, deactivate, library: wallet } = useWeb3React()
+
+  // Fetch data from blockchain through metamask
+  const { data: account } = useSWR('account', metamaskFetcher)
 
   // Fetch data from blockchain through infura.io (without metamask)
   const { data: periodBlock } = useSWR(['periodBlock'], ICOContractFetcher)
@@ -40,6 +46,19 @@ const Home: NextPage = () => {
   const { data: withdrawLimit } = useSWR(['withdrawLimit'], ICOContractFetcher)
   const { data: currentPeriod } = useSWR(['currentPeriod'], ICOContractFetcher)
   const { data: currentBlock } = useSWR(['blockNumber'], web3Fetcher)
+  const { data: participations, setSize } = useSWRInfinite(
+    (index, previousData) => {
+      if (index === (numOfPeriods as BigNumber).toNumber()) return null
+      return ['participation', account, index]
+    },
+    ICOContractFetcher
+  )
+  // update size of participation array to be loaded
+  useEffect(() => {
+    if (numOfPeriods) {
+      setSize((numOfPeriods as BigNumber).toNumber())
+    }
+  }, [numOfPeriods, setSize])
 
   // convert raw data to useful shape
   const periodSaleRemainingBlocks =
@@ -54,6 +73,18 @@ const Home: NextPage = () => {
           .toString()
           .split('.')[0]
       : '----'
+
+  // check there's some withdrawable tokensd
+  useEffect(() => {
+    setIsTokenWithdrawable(false)
+
+    if (participations) {
+      console.log(participations)
+      participations.forEach((participation) => {
+        if (participation.toString()) setIsTokenWithdrawable(true)
+      })
+    }
+  }, [participations])
 
   // calculate current sale phase
   useEffect(() => {
@@ -206,9 +237,17 @@ const Home: NextPage = () => {
               tokenToEth={tokenToEth}
             />
           </div>
-          <div className="flex grow flex-col items-center justify-center">
-            <Text str="You can withdraw ---- ETH" className="text-3xl" />
-            <Button str="Withdraw ETH" className="w-[560px]" disabled />
+
+          <div className="flex grow flex-col items-center justify-evenly">
+            <Button
+              str="Withdraw Token"
+              className="w-[560px]"
+              disabled={isTokenWithdrawable}
+            />
+            <div className="flex flex-col items-center justify-center">
+              <Text str="You can withdraw ---- ETH" className="text-3xl" />
+              <Button str="Withdraw ETH" className="w-[560px]" disabled />
+            </div>
           </div>
         </div>
 

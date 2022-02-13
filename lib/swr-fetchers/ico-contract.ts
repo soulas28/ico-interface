@@ -13,6 +13,7 @@ const provider = new ethers.providers.JsonRpcProvider(providerURL)
  * Fetcher to get contract's info
  * @param type - type of information you want.
  * @param arg1 - custom arg 1.
+ * @param arg2 - custom arg 2.
  *
  * @remarks when type is "deployedBlock", arg1 is not used.
  * @remarks when type is "name", arg1 is not used.
@@ -23,6 +24,7 @@ const provider = new ethers.providers.JsonRpcProvider(providerURL)
  * @remarks when type is "rate", arg1 is not used.
  * @remarks when type is "withdrawLimit", arg1 is not used.
  * @remarks when type is "currentPeriod", arg1 is not used.
+ * @remarks when type is "participation", arg1 is address and arg2 is period.
  *
  * @returns the data you specified in type.
  */
@@ -39,10 +41,12 @@ export const ICOContractFetcher: Fetcher<
       | 'rate'
       | 'withdrawLimit'
       | 'currentPeriod'
+      | 'participation'
     ),
-    string?
+    any,
+    any
   ]
-> = (type, arg1) => {
+> = (type, arg1, arg2) => {
   if (!contractAddress) return ''
   const contract = ICO__factory.connect(contractAddress, provider)
   switch (type) {
@@ -72,6 +76,9 @@ export const ICOContractFetcher: Fetcher<
       break
     case 'currentPeriod':
       return contract.getCurrentPeriod()
+      break
+    case 'participation':
+      return contract.participation(arg1, arg2)
       break
   }
 }
