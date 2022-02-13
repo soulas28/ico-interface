@@ -38,7 +38,6 @@ export const SwapForm: React.FC<SwapFormProps> = (props) => {
       setTkn(value)
       setEth(await props.tokenToEth(value))
     }
-    console.log('tkn input')
   }
   const validate = (target: string) => target.match(/^[0-9]*\.?[0-9]{0,18}$/)
 

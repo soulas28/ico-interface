@@ -59,8 +59,6 @@ const Home: NextPage = () => {
     ICOContractFetcher
   )
 
-  console.log(participations)
-
   // update size of participation array to be loaded
   useEffect(() => {
     if (numOfPeriods) {
