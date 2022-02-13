@@ -3,9 +3,8 @@
 /* tslint:disable */
 
 /* eslint-disable */
-import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
-import { FunctionFragment, Result } from "@ethersproject/abi";
-import { Listener, Provider } from "@ethersproject/providers";
+import { FunctionFragment, Result } from '@ethersproject/abi'
+import { Listener, Provider } from '@ethersproject/providers'
 import {
   BaseContract,
   BigNumber,
@@ -17,120 +16,122 @@ import {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
+} from 'ethers'
+
+import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common'
 
 export interface MigrationsInterface extends utils.Interface {
-  contractName: "Migrations";
+  contractName: 'Migrations'
   functions: {
-    "last_completed_migration()": FunctionFragment;
-    "owner()": FunctionFragment;
-    "setCompleted(uint256)": FunctionFragment;
-  };
+    'last_completed_migration()': FunctionFragment
+    'owner()': FunctionFragment
+    'setCompleted(uint256)': FunctionFragment
+  }
 
   encodeFunctionData(
-    functionFragment: "last_completed_migration",
+    functionFragment: 'last_completed_migration',
     values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  ): string
+  encodeFunctionData(functionFragment: 'owner', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "setCompleted",
+    functionFragment: 'setCompleted',
     values: [BigNumberish]
-  ): string;
+  ): string
 
   decodeFunctionResult(
-    functionFragment: "last_completed_migration",
+    functionFragment: 'last_completed_migration',
     data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  ): Result
+  decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "setCompleted",
+    functionFragment: 'setCompleted',
     data: BytesLike
-  ): Result;
+  ): Result
 
-  events: {};
+  events: {}
 }
 
 export interface Migrations extends BaseContract {
-  contractName: "Migrations";
-  connect(signerOrProvider: Signer | Provider | string): this;
-  attach(addressOrName: string): this;
-  deployed(): Promise<this>;
+  contractName: 'Migrations'
+  connect(signerOrProvider: Signer | Provider | string): this
+  attach(addressOrName: string): this
+  deployed(): Promise<this>
 
-  interface: MigrationsInterface;
+  interface: MigrationsInterface
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
     toBlock?: string | number | undefined
-  ): Promise<Array<TEvent>>;
+  ): Promise<Array<TEvent>>
 
   listeners<TEvent extends TypedEvent>(
     eventFilter?: TypedEventFilter<TEvent>
-  ): Array<TypedListener<TEvent>>;
-  listeners(eventName?: string): Array<Listener>;
+  ): Array<TypedListener<TEvent>>
+  listeners(eventName?: string): Array<Listener>
   removeAllListeners<TEvent extends TypedEvent>(
     eventFilter: TypedEventFilter<TEvent>
-  ): this;
-  removeAllListeners(eventName?: string): this;
-  off: OnEvent<this>;
-  on: OnEvent<this>;
-  once: OnEvent<this>;
-  removeListener: OnEvent<this>;
+  ): this
+  removeAllListeners(eventName?: string): this
+  off: OnEvent<this>
+  on: OnEvent<this>
+  once: OnEvent<this>
+  removeListener: OnEvent<this>
 
   functions: {
-    last_completed_migration(overrides?: CallOverrides): Promise<[BigNumber]>;
+    last_completed_migration(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    owner(overrides?: CallOverrides): Promise<[string]>;
+    owner(overrides?: CallOverrides): Promise<[string]>
 
     setCompleted(
       completed: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-  };
+    ): Promise<ContractTransaction>
+  }
 
-  last_completed_migration(overrides?: CallOverrides): Promise<BigNumber>;
+  last_completed_migration(overrides?: CallOverrides): Promise<BigNumber>
 
-  owner(overrides?: CallOverrides): Promise<string>;
+  owner(overrides?: CallOverrides): Promise<string>
 
   setCompleted(
     completed: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
   callStatic: {
-    last_completed_migration(overrides?: CallOverrides): Promise<BigNumber>;
+    last_completed_migration(overrides?: CallOverrides): Promise<BigNumber>
 
-    owner(overrides?: CallOverrides): Promise<string>;
+    owner(overrides?: CallOverrides): Promise<string>
 
     setCompleted(
       completed: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
-  };
+    ): Promise<void>
+  }
 
-  filters: {};
+  filters: {}
 
   estimateGas: {
-    last_completed_migration(overrides?: CallOverrides): Promise<BigNumber>;
+    last_completed_migration(overrides?: CallOverrides): Promise<BigNumber>
 
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
+    owner(overrides?: CallOverrides): Promise<BigNumber>
 
     setCompleted(
       completed: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-  };
+    ): Promise<BigNumber>
+  }
 
   populateTransaction: {
     last_completed_migration(
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     setCompleted(
       completed: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-  };
+    ): Promise<PopulatedTransaction>
+  }
 }

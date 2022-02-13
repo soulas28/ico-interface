@@ -3,9 +3,8 @@
 /* tslint:disable */
 
 /* eslint-disable */
-import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
-import { FunctionFragment, Result, EventFragment } from "@ethersproject/abi";
-import { Listener, Provider } from "@ethersproject/providers";
+import { FunctionFragment, Result, EventFragment } from '@ethersproject/abi'
+import { Listener, Provider } from '@ethersproject/providers'
 import {
   BaseContract,
   BigNumber,
@@ -18,310 +17,300 @@ import {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
+} from 'ethers'
+
+import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common'
 
 export interface ICOInterface extends utils.Interface {
-  contractName: "ICO";
+  contractName: 'ICO'
   functions: {
-    "allowance(address,address)": FunctionFragment;
-    "approve(address,uint256)": FunctionFragment;
-    "balanceOf(address)": FunctionFragment;
-    "decimals()": FunctionFragment;
-    "decreaseAllowance(address,uint256)": FunctionFragment;
-    "deployedBlock()": FunctionFragment;
-    "increaseAllowance(address,uint256)": FunctionFragment;
-    "isLimited()": FunctionFragment;
-    "name()": FunctionFragment;
-    "numOfPeriods()": FunctionFragment;
-    "owner()": FunctionFragment;
-    "periodBlock()": FunctionFragment;
-    "rate()": FunctionFragment;
-    "symbol()": FunctionFragment;
-    "totalSupply()": FunctionFragment;
-    "transfer(address,uint256)": FunctionFragment;
-    "transferFrom(address,address,uint256)": FunctionFragment;
-    "unitPeriodBalance()": FunctionFragment;
-    "unlock()": FunctionFragment;
-    "withdrawLimit()": FunctionFragment;
-    "withdrawal(address)": FunctionFragment;
-    "numOfParticipants(uint256)": FunctionFragment;
-    "participation(address,uint256)": FunctionFragment;
-    "ETHToToken(uint256)": FunctionFragment;
-    "TokenToETH(uint256)": FunctionFragment;
-    "getCurrentPeriod()": FunctionFragment;
-    "hasPeriodEnded(uint256)": FunctionFragment;
-    "hasSaleEnded()": FunctionFragment;
-    "hasWithdrawalTimeEnded()": FunctionFragment;
-    "participate()": FunctionFragment;
-    "purchase()": FunctionFragment;
-    "withdrawToken(uint256)": FunctionFragment;
-    "withdrawETH()": FunctionFragment;
-    "withdrawRemainingToken()": FunctionFragment;
-    "withdrawRemainingETH()": FunctionFragment;
-  };
+    'allowance(address,address)': FunctionFragment
+    'approve(address,uint256)': FunctionFragment
+    'balanceOf(address)': FunctionFragment
+    'decimals()': FunctionFragment
+    'decreaseAllowance(address,uint256)': FunctionFragment
+    'deployedBlock()': FunctionFragment
+    'increaseAllowance(address,uint256)': FunctionFragment
+    'isLimited()': FunctionFragment
+    'name()': FunctionFragment
+    'numOfPeriods()': FunctionFragment
+    'owner()': FunctionFragment
+    'periodBlock()': FunctionFragment
+    'rate()': FunctionFragment
+    'symbol()': FunctionFragment
+    'totalSupply()': FunctionFragment
+    'transfer(address,uint256)': FunctionFragment
+    'transferFrom(address,address,uint256)': FunctionFragment
+    'unitPeriodBalance()': FunctionFragment
+    'unlock()': FunctionFragment
+    'withdrawLimit()': FunctionFragment
+    'withdrawal(address)': FunctionFragment
+    'numOfParticipants(uint256)': FunctionFragment
+    'participation(address,uint256)': FunctionFragment
+    'ETHToToken(uint256)': FunctionFragment
+    'TokenToETH(uint256)': FunctionFragment
+    'getCurrentPeriod()': FunctionFragment
+    'hasPeriodEnded(uint256)': FunctionFragment
+    'hasSaleEnded()': FunctionFragment
+    'hasWithdrawalTimeEnded()': FunctionFragment
+    'participate()': FunctionFragment
+    'purchase()': FunctionFragment
+    'withdrawToken(uint256)': FunctionFragment
+    'withdrawETH()': FunctionFragment
+    'withdrawRemainingToken()': FunctionFragment
+    'withdrawRemainingETH()': FunctionFragment
+  }
 
   encodeFunctionData(
-    functionFragment: "allowance",
+    functionFragment: 'allowance',
     values: [string, string]
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "approve",
+    functionFragment: 'approve',
     values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
-  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
+  ): string
+  encodeFunctionData(functionFragment: 'balanceOf', values: [string]): string
+  encodeFunctionData(functionFragment: 'decimals', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "decreaseAllowance",
+    functionFragment: 'decreaseAllowance',
     values: [string, BigNumberish]
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "deployedBlock",
+    functionFragment: 'deployedBlock',
     values?: undefined
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "increaseAllowance",
+    functionFragment: 'increaseAllowance',
     values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "isLimited", values?: undefined): string;
-  encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  ): string
+  encodeFunctionData(functionFragment: 'isLimited', values?: undefined): string
+  encodeFunctionData(functionFragment: 'name', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "numOfPeriods",
+    functionFragment: 'numOfPeriods',
     values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  ): string
+  encodeFunctionData(functionFragment: 'owner', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "periodBlock",
+    functionFragment: 'periodBlock',
     values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "rate", values?: undefined): string;
-  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
+  ): string
+  encodeFunctionData(functionFragment: 'rate', values?: undefined): string
+  encodeFunctionData(functionFragment: 'symbol', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "totalSupply",
+    functionFragment: 'totalSupply',
     values?: undefined
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "transfer",
+    functionFragment: 'transfer',
     values: [string, BigNumberish]
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "transferFrom",
+    functionFragment: 'transferFrom',
     values: [string, string, BigNumberish]
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "unitPeriodBalance",
+    functionFragment: 'unitPeriodBalance',
     values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "unlock", values?: undefined): string;
+  ): string
+  encodeFunctionData(functionFragment: 'unlock', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "withdrawLimit",
+    functionFragment: 'withdrawLimit',
     values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "withdrawal", values: [string]): string;
+  ): string
+  encodeFunctionData(functionFragment: 'withdrawal', values: [string]): string
   encodeFunctionData(
-    functionFragment: "numOfParticipants",
+    functionFragment: 'numOfParticipants',
     values: [BigNumberish]
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "participation",
+    functionFragment: 'participation',
     values: [string, BigNumberish]
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "ETHToToken",
+    functionFragment: 'ETHToToken',
     values: [BigNumberish]
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "TokenToETH",
+    functionFragment: 'TokenToETH',
     values: [BigNumberish]
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "getCurrentPeriod",
+    functionFragment: 'getCurrentPeriod',
     values?: undefined
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "hasPeriodEnded",
+    functionFragment: 'hasPeriodEnded',
     values: [BigNumberish]
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "hasSaleEnded",
+    functionFragment: 'hasSaleEnded',
     values?: undefined
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "hasWithdrawalTimeEnded",
+    functionFragment: 'hasWithdrawalTimeEnded',
     values?: undefined
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "participate",
+    functionFragment: 'participate',
     values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "purchase", values?: undefined): string;
+  ): string
+  encodeFunctionData(functionFragment: 'purchase', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "withdrawToken",
+    functionFragment: 'withdrawToken',
     values: [BigNumberish]
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "withdrawETH",
+    functionFragment: 'withdrawETH',
     values?: undefined
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "withdrawRemainingToken",
+    functionFragment: 'withdrawRemainingToken',
     values?: undefined
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "withdrawRemainingETH",
+    functionFragment: 'withdrawRemainingETH',
     values?: undefined
-  ): string;
+  ): string
 
-  decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'allowance', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'approve', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'decimals', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "decreaseAllowance",
+    functionFragment: 'decreaseAllowance',
     data: BytesLike
-  ): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "deployedBlock",
+    functionFragment: 'deployedBlock',
     data: BytesLike
-  ): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "increaseAllowance",
+    functionFragment: 'increaseAllowance',
     data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "isLimited", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  ): Result
+  decodeFunctionResult(functionFragment: 'isLimited', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'name', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "numOfPeriods",
+    functionFragment: 'numOfPeriods',
     data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  ): Result
+  decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'periodBlock', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'rate', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'symbol', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'totalSupply', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'transfer', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "periodBlock",
+    functionFragment: 'transferFrom',
     data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "rate", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "totalSupply",
+    functionFragment: 'unitPeriodBalance',
     data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
+  ): Result
+  decodeFunctionResult(functionFragment: 'unlock', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "transferFrom",
+    functionFragment: 'withdrawLimit',
     data: BytesLike
-  ): Result;
+  ): Result
+  decodeFunctionResult(functionFragment: 'withdrawal', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "unitPeriodBalance",
+    functionFragment: 'numOfParticipants',
     data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "unlock", data: BytesLike): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "withdrawLimit",
+    functionFragment: 'participation',
     data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "withdrawal", data: BytesLike): Result;
+  ): Result
+  decodeFunctionResult(functionFragment: 'ETHToToken', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'TokenToETH', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "numOfParticipants",
+    functionFragment: 'getCurrentPeriod',
     data: BytesLike
-  ): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "participation",
+    functionFragment: 'hasPeriodEnded',
     data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "ETHToToken", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "TokenToETH", data: BytesLike): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "getCurrentPeriod",
+    functionFragment: 'hasSaleEnded',
     data: BytesLike
-  ): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "hasPeriodEnded",
+    functionFragment: 'hasWithdrawalTimeEnded',
     data: BytesLike
-  ): Result;
+  ): Result
+  decodeFunctionResult(functionFragment: 'participate', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'purchase', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "hasSaleEnded",
+    functionFragment: 'withdrawToken',
     data: BytesLike
-  ): Result;
+  ): Result
+  decodeFunctionResult(functionFragment: 'withdrawETH', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "hasWithdrawalTimeEnded",
+    functionFragment: 'withdrawRemainingToken',
     data: BytesLike
-  ): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "participate",
+    functionFragment: 'withdrawRemainingETH',
     data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "purchase", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawETH",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawRemainingToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawRemainingETH",
-    data: BytesLike
-  ): Result;
+  ): Result
 
   events: {
-    "Approval(address,address,uint256)": EventFragment;
-    "Transfer(address,address,uint256)": EventFragment;
-    "Unlocked()": EventFragment;
-  };
+    'Approval(address,address,uint256)': EventFragment
+    'Transfer(address,address,uint256)': EventFragment
+    'Unlocked()': EventFragment
+  }
 
-  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Unlocked"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Approval'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'Unlocked'): EventFragment
 }
 
 export type ApprovalEvent = TypedEvent<
   [string, string, BigNumber],
   { owner: string; spender: string; value: BigNumber }
->;
+>
 
-export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>;
+export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>
 
 export type TransferEvent = TypedEvent<
   [string, string, BigNumber],
   { from: string; to: string; value: BigNumber }
->;
+>
 
-export type TransferEventFilter = TypedEventFilter<TransferEvent>;
+export type TransferEventFilter = TypedEventFilter<TransferEvent>
 
-export type UnlockedEvent = TypedEvent<[], {}>;
+export type UnlockedEvent = TypedEvent<[], {}>
 
-export type UnlockedEventFilter = TypedEventFilter<UnlockedEvent>;
+export type UnlockedEventFilter = TypedEventFilter<UnlockedEvent>
 
 export interface ICO extends BaseContract {
-  contractName: "ICO";
-  connect(signerOrProvider: Signer | Provider | string): this;
-  attach(addressOrName: string): this;
-  deployed(): Promise<this>;
+  contractName: 'ICO'
+  connect(signerOrProvider: Signer | Provider | string): this
+  attach(addressOrName: string): this
+  deployed(): Promise<this>
 
-  interface: ICOInterface;
+  interface: ICOInterface
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
     toBlock?: string | number | undefined
-  ): Promise<Array<TEvent>>;
+  ): Promise<Array<TEvent>>
 
   listeners<TEvent extends TypedEvent>(
     eventFilter?: TypedEventFilter<TEvent>
-  ): Array<TypedListener<TEvent>>;
-  listeners(eventName?: string): Array<Listener>;
+  ): Array<TypedListener<TEvent>>
+  listeners(eventName?: string): Array<Listener>
   removeAllListeners<TEvent extends TypedEvent>(
     eventFilter: TypedEventFilter<TEvent>
-  ): this;
-  removeAllListeners(eventName?: string): this;
-  off: OnEvent<this>;
-  on: OnEvent<this>;
-  once: OnEvent<this>;
-  removeListener: OnEvent<this>;
+  ): this
+  removeAllListeners(eventName?: string): this
+  off: OnEvent<this>
+  on: OnEvent<this>
+  once: OnEvent<this>
+  removeListener: OnEvent<this>
 
   functions: {
     /**
@@ -331,7 +320,7 @@ export interface ICO extends BaseContract {
       owner: string,
       spender: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    ): Promise<[BigNumber]>
 
     /**
      * See {IERC20-approve}. NOTE: If `amount` is the maximum `uint256`, the allowance is not updated on `transferFrom`. This is semantically equivalent to an infinite approval. Requirements: - `spender` cannot be the zero address.
@@ -340,17 +329,17 @@ export interface ICO extends BaseContract {
       spender: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
     /**
      * See {IERC20-balanceOf}.
      */
-    balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>
 
     /**
      * Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5.05` (`505 / 10 ** 2`). Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the value {ERC20} uses, unless this function is overridden; NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}.
      */
-    decimals(overrides?: CallOverrides): Promise<[number]>;
+    decimals(overrides?: CallOverrides): Promise<[number]>
 
     /**
      * Atomically decreases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address. - `spender` must have allowance for the caller of at least `subtractedValue`.
@@ -359,9 +348,9 @@ export interface ICO extends BaseContract {
       spender: string,
       subtractedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
-    deployedBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
+    deployedBlock(overrides?: CallOverrides): Promise<[BigNumber]>
 
     /**
      * Atomically increases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address.
@@ -370,32 +359,32 @@ export interface ICO extends BaseContract {
       spender: string,
       addedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
-    isLimited(overrides?: CallOverrides): Promise<[boolean]>;
+    isLimited(overrides?: CallOverrides): Promise<[boolean]>
 
     /**
      * Returns the name of the token.
      */
-    name(overrides?: CallOverrides): Promise<[string]>;
+    name(overrides?: CallOverrides): Promise<[string]>
 
-    numOfPeriods(overrides?: CallOverrides): Promise<[BigNumber]>;
+    numOfPeriods(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    owner(overrides?: CallOverrides): Promise<[string]>;
+    owner(overrides?: CallOverrides): Promise<[string]>
 
-    periodBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
+    periodBlock(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    rate(overrides?: CallOverrides): Promise<[BigNumber]>;
+    rate(overrides?: CallOverrides): Promise<[BigNumber]>
 
     /**
      * Returns the symbol of the token, usually a shorter version of the name.
      */
-    symbol(overrides?: CallOverrides): Promise<[string]>;
+    symbol(overrides?: CallOverrides): Promise<[string]>
 
     /**
      * See {IERC20-totalSupply}.
      */
-    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>
 
     /**
      * See {IERC20-transfer}. Requirements: - `to` cannot be the zero address. - the caller must have a balance of at least `amount`.
@@ -404,7 +393,7 @@ export interface ICO extends BaseContract {
       to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
     /**
      * See {IERC20-transferFrom}. Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20}. NOTE: Does not update the allowance if the current allowance is the maximum `uint256`. Requirements: - `from` and `to` cannot be the zero address. - `from` must have a balance of at least `amount`. - the caller must have allowance for ``from``'s tokens of at least `amount`.
@@ -414,75 +403,75 @@ export interface ICO extends BaseContract {
       to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
-    unitPeriodBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
+    unitPeriodBalance(overrides?: CallOverrides): Promise<[BigNumber]>
 
     unlock(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
-    withdrawLimit(overrides?: CallOverrides): Promise<[BigNumber]>;
+    withdrawLimit(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    withdrawal(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    withdrawal(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>
 
     numOfParticipants(
       period_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    ): Promise<[BigNumber]>
 
     participation(
       account_: string,
       period_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    ): Promise<[BigNumber]>
 
     ETHToToken(
       eth_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    ): Promise<[BigNumber]>
 
     TokenToETH(
       token_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    ): Promise<[BigNumber]>
 
-    getCurrentPeriod(overrides?: CallOverrides): Promise<[BigNumber]>;
+    getCurrentPeriod(overrides?: CallOverrides): Promise<[BigNumber]>
 
     hasPeriodEnded(
       period_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    ): Promise<[boolean]>
 
-    hasSaleEnded(overrides?: CallOverrides): Promise<[boolean]>;
+    hasSaleEnded(overrides?: CallOverrides): Promise<[boolean]>
 
-    hasWithdrawalTimeEnded(overrides?: CallOverrides): Promise<[boolean]>;
+    hasWithdrawalTimeEnded(overrides?: CallOverrides): Promise<[boolean]>
 
     participate(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
     purchase(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
     withdrawToken(
       period_: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
     withdrawETH(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
     withdrawRemainingToken(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
     withdrawRemainingETH(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-  };
+    ): Promise<ContractTransaction>
+  }
 
   /**
    * See {IERC20-allowance}.
@@ -491,7 +480,7 @@ export interface ICO extends BaseContract {
     owner: string,
     spender: string,
     overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  ): Promise<BigNumber>
 
   /**
    * See {IERC20-approve}. NOTE: If `amount` is the maximum `uint256`, the allowance is not updated on `transferFrom`. This is semantically equivalent to an infinite approval. Requirements: - `spender` cannot be the zero address.
@@ -500,17 +489,17 @@ export interface ICO extends BaseContract {
     spender: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
   /**
    * See {IERC20-balanceOf}.
    */
-  balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+  balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>
 
   /**
    * Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5.05` (`505 / 10 ** 2`). Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the value {ERC20} uses, unless this function is overridden; NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}.
    */
-  decimals(overrides?: CallOverrides): Promise<number>;
+  decimals(overrides?: CallOverrides): Promise<number>
 
   /**
    * Atomically decreases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address. - `spender` must have allowance for the caller of at least `subtractedValue`.
@@ -519,9 +508,9 @@ export interface ICO extends BaseContract {
     spender: string,
     subtractedValue: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
-  deployedBlock(overrides?: CallOverrides): Promise<BigNumber>;
+  deployedBlock(overrides?: CallOverrides): Promise<BigNumber>
 
   /**
    * Atomically increases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address.
@@ -530,32 +519,32 @@ export interface ICO extends BaseContract {
     spender: string,
     addedValue: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
-  isLimited(overrides?: CallOverrides): Promise<boolean>;
+  isLimited(overrides?: CallOverrides): Promise<boolean>
 
   /**
    * Returns the name of the token.
    */
-  name(overrides?: CallOverrides): Promise<string>;
+  name(overrides?: CallOverrides): Promise<string>
 
-  numOfPeriods(overrides?: CallOverrides): Promise<BigNumber>;
+  numOfPeriods(overrides?: CallOverrides): Promise<BigNumber>
 
-  owner(overrides?: CallOverrides): Promise<string>;
+  owner(overrides?: CallOverrides): Promise<string>
 
-  periodBlock(overrides?: CallOverrides): Promise<BigNumber>;
+  periodBlock(overrides?: CallOverrides): Promise<BigNumber>
 
-  rate(overrides?: CallOverrides): Promise<BigNumber>;
+  rate(overrides?: CallOverrides): Promise<BigNumber>
 
   /**
    * Returns the symbol of the token, usually a shorter version of the name.
    */
-  symbol(overrides?: CallOverrides): Promise<string>;
+  symbol(overrides?: CallOverrides): Promise<string>
 
   /**
    * See {IERC20-totalSupply}.
    */
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+  totalSupply(overrides?: CallOverrides): Promise<BigNumber>
 
   /**
    * See {IERC20-transfer}. Requirements: - `to` cannot be the zero address. - the caller must have a balance of at least `amount`.
@@ -564,7 +553,7 @@ export interface ICO extends BaseContract {
     to: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
   /**
    * See {IERC20-transferFrom}. Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20}. NOTE: Does not update the allowance if the current allowance is the maximum `uint256`. Requirements: - `from` and `to` cannot be the zero address. - `from` must have a balance of at least `amount`. - the caller must have allowance for ``from``'s tokens of at least `amount`.
@@ -574,71 +563,71 @@ export interface ICO extends BaseContract {
     to: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
-  unitPeriodBalance(overrides?: CallOverrides): Promise<BigNumber>;
+  unitPeriodBalance(overrides?: CallOverrides): Promise<BigNumber>
 
   unlock(
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
-  withdrawLimit(overrides?: CallOverrides): Promise<BigNumber>;
+  withdrawLimit(overrides?: CallOverrides): Promise<BigNumber>
 
-  withdrawal(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+  withdrawal(arg0: string, overrides?: CallOverrides): Promise<BigNumber>
 
   numOfParticipants(
     period_: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  ): Promise<BigNumber>
 
   participation(
     account_: string,
     period_: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  ): Promise<BigNumber>
 
-  ETHToToken(eth_: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+  ETHToToken(eth_: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>
 
   TokenToETH(
     token_: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  ): Promise<BigNumber>
 
-  getCurrentPeriod(overrides?: CallOverrides): Promise<BigNumber>;
+  getCurrentPeriod(overrides?: CallOverrides): Promise<BigNumber>
 
   hasPeriodEnded(
     period_: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<boolean>;
+  ): Promise<boolean>
 
-  hasSaleEnded(overrides?: CallOverrides): Promise<boolean>;
+  hasSaleEnded(overrides?: CallOverrides): Promise<boolean>
 
-  hasWithdrawalTimeEnded(overrides?: CallOverrides): Promise<boolean>;
+  hasWithdrawalTimeEnded(overrides?: CallOverrides): Promise<boolean>
 
   participate(
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
   purchase(
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
   withdrawToken(
     period_: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
   withdrawETH(
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
   withdrawRemainingToken(
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
   withdrawRemainingETH(
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
   callStatic: {
     /**
@@ -648,7 +637,7 @@ export interface ICO extends BaseContract {
       owner: string,
       spender: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     /**
      * See {IERC20-approve}. NOTE: If `amount` is the maximum `uint256`, the allowance is not updated on `transferFrom`. This is semantically equivalent to an infinite approval. Requirements: - `spender` cannot be the zero address.
@@ -657,17 +646,17 @@ export interface ICO extends BaseContract {
       spender: string,
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<boolean>
 
     /**
      * See {IERC20-balanceOf}.
      */
-    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>
 
     /**
      * Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5.05` (`505 / 10 ** 2`). Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the value {ERC20} uses, unless this function is overridden; NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}.
      */
-    decimals(overrides?: CallOverrides): Promise<number>;
+    decimals(overrides?: CallOverrides): Promise<number>
 
     /**
      * Atomically decreases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address. - `spender` must have allowance for the caller of at least `subtractedValue`.
@@ -676,9 +665,9 @@ export interface ICO extends BaseContract {
       spender: string,
       subtractedValue: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<boolean>
 
-    deployedBlock(overrides?: CallOverrides): Promise<BigNumber>;
+    deployedBlock(overrides?: CallOverrides): Promise<BigNumber>
 
     /**
      * Atomically increases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address.
@@ -687,32 +676,32 @@ export interface ICO extends BaseContract {
       spender: string,
       addedValue: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<boolean>
 
-    isLimited(overrides?: CallOverrides): Promise<boolean>;
+    isLimited(overrides?: CallOverrides): Promise<boolean>
 
     /**
      * Returns the name of the token.
      */
-    name(overrides?: CallOverrides): Promise<string>;
+    name(overrides?: CallOverrides): Promise<string>
 
-    numOfPeriods(overrides?: CallOverrides): Promise<BigNumber>;
+    numOfPeriods(overrides?: CallOverrides): Promise<BigNumber>
 
-    owner(overrides?: CallOverrides): Promise<string>;
+    owner(overrides?: CallOverrides): Promise<string>
 
-    periodBlock(overrides?: CallOverrides): Promise<BigNumber>;
+    periodBlock(overrides?: CallOverrides): Promise<BigNumber>
 
-    rate(overrides?: CallOverrides): Promise<BigNumber>;
+    rate(overrides?: CallOverrides): Promise<BigNumber>
 
     /**
      * Returns the symbol of the token, usually a shorter version of the name.
      */
-    symbol(overrides?: CallOverrides): Promise<string>;
+    symbol(overrides?: CallOverrides): Promise<string>
 
     /**
      * See {IERC20-totalSupply}.
      */
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>
 
     /**
      * See {IERC20-transfer}. Requirements: - `to` cannot be the zero address. - the caller must have a balance of at least `amount`.
@@ -721,7 +710,7 @@ export interface ICO extends BaseContract {
       to: string,
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<boolean>
 
     /**
      * See {IERC20-transferFrom}. Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20}. NOTE: Does not update the allowance if the current allowance is the maximum `uint256`. Requirements: - `from` and `to` cannot be the zero address. - `from` must have a balance of at least `amount`. - the caller must have allowance for ``from``'s tokens of at least `amount`.
@@ -731,90 +720,90 @@ export interface ICO extends BaseContract {
       to: string,
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<boolean>
 
-    unitPeriodBalance(overrides?: CallOverrides): Promise<BigNumber>;
+    unitPeriodBalance(overrides?: CallOverrides): Promise<BigNumber>
 
-    unlock(overrides?: CallOverrides): Promise<void>;
+    unlock(overrides?: CallOverrides): Promise<void>
 
-    withdrawLimit(overrides?: CallOverrides): Promise<BigNumber>;
+    withdrawLimit(overrides?: CallOverrides): Promise<BigNumber>
 
-    withdrawal(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+    withdrawal(arg0: string, overrides?: CallOverrides): Promise<BigNumber>
 
     numOfParticipants(
       period_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     participation(
       account_: string,
       period_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     ETHToToken(
       eth_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     TokenToETH(
       token_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    getCurrentPeriod(overrides?: CallOverrides): Promise<BigNumber>;
+    getCurrentPeriod(overrides?: CallOverrides): Promise<BigNumber>
 
     hasPeriodEnded(
       period_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<boolean>
 
-    hasSaleEnded(overrides?: CallOverrides): Promise<boolean>;
+    hasSaleEnded(overrides?: CallOverrides): Promise<boolean>
 
-    hasWithdrawalTimeEnded(overrides?: CallOverrides): Promise<boolean>;
+    hasWithdrawalTimeEnded(overrides?: CallOverrides): Promise<boolean>
 
-    participate(overrides?: CallOverrides): Promise<boolean>;
+    participate(overrides?: CallOverrides): Promise<boolean>
 
-    purchase(overrides?: CallOverrides): Promise<boolean>;
+    purchase(overrides?: CallOverrides): Promise<boolean>
 
     withdrawToken(
       period_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<boolean>
 
-    withdrawETH(overrides?: CallOverrides): Promise<boolean>;
+    withdrawETH(overrides?: CallOverrides): Promise<boolean>
 
-    withdrawRemainingToken(overrides?: CallOverrides): Promise<boolean>;
+    withdrawRemainingToken(overrides?: CallOverrides): Promise<boolean>
 
-    withdrawRemainingETH(overrides?: CallOverrides): Promise<boolean>;
-  };
+    withdrawRemainingETH(overrides?: CallOverrides): Promise<boolean>
+  }
 
   filters: {
-    "Approval(address,address,uint256)"(
+    'Approval(address,address,uint256)'(
       owner?: string | null,
       spender?: string | null,
       value?: null
-    ): ApprovalEventFilter;
+    ): ApprovalEventFilter
     Approval(
       owner?: string | null,
       spender?: string | null,
       value?: null
-    ): ApprovalEventFilter;
+    ): ApprovalEventFilter
 
-    "Transfer(address,address,uint256)"(
+    'Transfer(address,address,uint256)'(
       from?: string | null,
       to?: string | null,
       value?: null
-    ): TransferEventFilter;
+    ): TransferEventFilter
     Transfer(
       from?: string | null,
       to?: string | null,
       value?: null
-    ): TransferEventFilter;
+    ): TransferEventFilter
 
-    "Unlocked()"(): UnlockedEventFilter;
-    Unlocked(): UnlockedEventFilter;
-  };
+    'Unlocked()'(): UnlockedEventFilter
+    Unlocked(): UnlockedEventFilter
+  }
 
   estimateGas: {
     /**
@@ -824,7 +813,7 @@ export interface ICO extends BaseContract {
       owner: string,
       spender: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     /**
      * See {IERC20-approve}. NOTE: If `amount` is the maximum `uint256`, the allowance is not updated on `transferFrom`. This is semantically equivalent to an infinite approval. Requirements: - `spender` cannot be the zero address.
@@ -833,17 +822,17 @@ export interface ICO extends BaseContract {
       spender: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     /**
      * See {IERC20-balanceOf}.
      */
-    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>
 
     /**
      * Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5.05` (`505 / 10 ** 2`). Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the value {ERC20} uses, unless this function is overridden; NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}.
      */
-    decimals(overrides?: CallOverrides): Promise<BigNumber>;
+    decimals(overrides?: CallOverrides): Promise<BigNumber>
 
     /**
      * Atomically decreases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address. - `spender` must have allowance for the caller of at least `subtractedValue`.
@@ -852,9 +841,9 @@ export interface ICO extends BaseContract {
       spender: string,
       subtractedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    deployedBlock(overrides?: CallOverrides): Promise<BigNumber>;
+    deployedBlock(overrides?: CallOverrides): Promise<BigNumber>
 
     /**
      * Atomically increases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address.
@@ -863,32 +852,32 @@ export interface ICO extends BaseContract {
       spender: string,
       addedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    isLimited(overrides?: CallOverrides): Promise<BigNumber>;
+    isLimited(overrides?: CallOverrides): Promise<BigNumber>
 
     /**
      * Returns the name of the token.
      */
-    name(overrides?: CallOverrides): Promise<BigNumber>;
+    name(overrides?: CallOverrides): Promise<BigNumber>
 
-    numOfPeriods(overrides?: CallOverrides): Promise<BigNumber>;
+    numOfPeriods(overrides?: CallOverrides): Promise<BigNumber>
 
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
+    owner(overrides?: CallOverrides): Promise<BigNumber>
 
-    periodBlock(overrides?: CallOverrides): Promise<BigNumber>;
+    periodBlock(overrides?: CallOverrides): Promise<BigNumber>
 
-    rate(overrides?: CallOverrides): Promise<BigNumber>;
+    rate(overrides?: CallOverrides): Promise<BigNumber>
 
     /**
      * Returns the symbol of the token, usually a shorter version of the name.
      */
-    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+    symbol(overrides?: CallOverrides): Promise<BigNumber>
 
     /**
      * See {IERC20-totalSupply}.
      */
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>
 
     /**
      * See {IERC20-transfer}. Requirements: - `to` cannot be the zero address. - the caller must have a balance of at least `amount`.
@@ -897,7 +886,7 @@ export interface ICO extends BaseContract {
       to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     /**
      * See {IERC20-transferFrom}. Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20}. NOTE: Does not update the allowance if the current allowance is the maximum `uint256`. Requirements: - `from` and `to` cannot be the zero address. - `from` must have a balance of at least `amount`. - the caller must have allowance for ``from``'s tokens of at least `amount`.
@@ -907,75 +896,75 @@ export interface ICO extends BaseContract {
       to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    unitPeriodBalance(overrides?: CallOverrides): Promise<BigNumber>;
+    unitPeriodBalance(overrides?: CallOverrides): Promise<BigNumber>
 
     unlock(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    withdrawLimit(overrides?: CallOverrides): Promise<BigNumber>;
+    withdrawLimit(overrides?: CallOverrides): Promise<BigNumber>
 
-    withdrawal(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+    withdrawal(arg0: string, overrides?: CallOverrides): Promise<BigNumber>
 
     numOfParticipants(
       period_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     participation(
       account_: string,
       period_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     ETHToToken(
       eth_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     TokenToETH(
       token_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    getCurrentPeriod(overrides?: CallOverrides): Promise<BigNumber>;
+    getCurrentPeriod(overrides?: CallOverrides): Promise<BigNumber>
 
     hasPeriodEnded(
       period_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    hasSaleEnded(overrides?: CallOverrides): Promise<BigNumber>;
+    hasSaleEnded(overrides?: CallOverrides): Promise<BigNumber>
 
-    hasWithdrawalTimeEnded(overrides?: CallOverrides): Promise<BigNumber>;
+    hasWithdrawalTimeEnded(overrides?: CallOverrides): Promise<BigNumber>
 
     participate(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     purchase(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     withdrawToken(
       period_: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     withdrawETH(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     withdrawRemainingToken(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     withdrawRemainingETH(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-  };
+    ): Promise<BigNumber>
+  }
 
   populateTransaction: {
     /**
@@ -985,7 +974,7 @@ export interface ICO extends BaseContract {
       owner: string,
       spender: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
     /**
      * See {IERC20-approve}. NOTE: If `amount` is the maximum `uint256`, the allowance is not updated on `transferFrom`. This is semantically equivalent to an infinite approval. Requirements: - `spender` cannot be the zero address.
@@ -994,7 +983,7 @@ export interface ICO extends BaseContract {
       spender: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
     /**
      * See {IERC20-balanceOf}.
@@ -1002,12 +991,12 @@ export interface ICO extends BaseContract {
     balanceOf(
       account: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
     /**
      * Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5.05` (`505 / 10 ** 2`). Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the value {ERC20} uses, unless this function is overridden; NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}.
      */
-    decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     /**
      * Atomically decreases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address. - `spender` must have allowance for the caller of at least `subtractedValue`.
@@ -1016,9 +1005,9 @@ export interface ICO extends BaseContract {
       spender: string,
       subtractedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    deployedBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    deployedBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     /**
      * Atomically increases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address.
@@ -1027,32 +1016,32 @@ export interface ICO extends BaseContract {
       spender: string,
       addedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    isLimited(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    isLimited(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     /**
      * Returns the name of the token.
      */
-    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    numOfPeriods(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    numOfPeriods(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    periodBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    periodBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    rate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    rate(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     /**
      * Returns the symbol of the token, usually a shorter version of the name.
      */
-    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     /**
      * See {IERC20-totalSupply}.
      */
-    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     /**
      * See {IERC20-transfer}. Requirements: - `to` cannot be the zero address. - the caller must have a balance of at least `amount`.
@@ -1061,7 +1050,7 @@ export interface ICO extends BaseContract {
       to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
     /**
      * See {IERC20-transferFrom}. Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20}. NOTE: Does not update the allowance if the current allowance is the maximum `uint256`. Requirements: - `from` and `to` cannot be the zero address. - `from` must have a balance of at least `amount`. - the caller must have allowance for ``from``'s tokens of at least `amount`.
@@ -1071,78 +1060,78 @@ export interface ICO extends BaseContract {
       to: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    unitPeriodBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    unitPeriodBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     unlock(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    withdrawLimit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    withdrawLimit(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     withdrawal(
       arg0: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
     numOfParticipants(
       period_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
     participation(
       account_: string,
       period_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
     ETHToToken(
       eth_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
     TokenToETH(
       token_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    getCurrentPeriod(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getCurrentPeriod(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     hasPeriodEnded(
       period_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    hasSaleEnded(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    hasSaleEnded(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     hasWithdrawalTimeEnded(
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
     participate(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
     purchase(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
     withdrawToken(
       period_: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
     withdrawETH(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
     withdrawRemainingToken(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
     withdrawRemainingETH(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-  };
+    ): Promise<PopulatedTransaction>
+  }
 }
