@@ -82,14 +82,16 @@ const Home: NextPage = () => {
   // check if there's some withdrawable tokens
   useEffect(() => {
     setIsTokenWithdrawable(false)
-
-    if (participations) {
-      participations.forEach((participation) => {
-        if (participation.toString()) setIsTokenWithdrawable(true)
-      })
+    if (currentPeriod && (currentPeriod as BigNumber).toNumber() !== 0) {
+      if (participations) {
+        participations.forEach((participation) => {
+          if (participation.toString()) setIsTokenWithdrawable(true)
+        })
+      }
     }
-  }, [participations])
+  }, [participations, currentPeriod])
 
+  console.log(isTokenWithdrawable)
   // calculate current sale phase
   useEffect(() => {
     if (
@@ -246,17 +248,19 @@ const Home: NextPage = () => {
             <Button
               str="Withdraw Token"
               className="w-[560px]"
-              disabled={isTokenWithdrawable}
+              disabled={!isTokenWithdrawable}
             />
             <div className="flex flex-col items-center justify-center">
               <Text
                 str={
                   'You can withdraw ' +
-                  ethers.FixedNumber.fromString(
-                    (withdrawal as BigNumber).toString()
-                  )
-                    .divUnsafe(decimal)
-                    .toString() +
+                  (withdrawal
+                    ? ethers.FixedNumber.fromString(
+                        (withdrawal as BigNumber).toString()
+                      )
+                        .divUnsafe(decimal)
+                        .toString()
+                    : '----') +
                   ' ETH'
                 }
                 className="text-3xl"
@@ -264,7 +268,7 @@ const Home: NextPage = () => {
               <Button
                 str="Withdraw ETH"
                 className="w-[560px]"
-                disabled={(withdrawal as BigNumber).eq(0)}
+                disabled={withdrawal ? (withdrawal as BigNumber).eq(0) : true}
               />
             </div>
           </div>
