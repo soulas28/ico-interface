@@ -26,6 +26,10 @@ type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
 const Home: NextPage = () => {
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || ''
   const decimal = ethers.FixedNumber.fromString('1000000000000000000')
+  // TODO: metamask error handling
+  // TODO: remaining token indicator
+  // TODO: support for early finish
+  // FIXME: finish condition error
 
   // states
   const [isWalletMenuShown, setIsWalletMenuShown] = useState(false)
@@ -76,19 +80,50 @@ const Home: NextPage = () => {
           .toString()
           .split('.')[0]
       : '----'
+  const lastSaleRemainingBlocks =
+    periodBlock && numOfPeriods && deployedBlock && currentBlock
+      ? ethers.FixedNumber.fromString(periodBlock.toString())
+          .mulUnsafe(
+            ethers.FixedNumber.fromString(
+              (numOfPeriods as BigNumber).add('1').toString()
+            )
+          )
+          .addUnsafe(ethers.FixedNumber.fromString(deployedBlock.toString()))
+          .subUnsafe(ethers.FixedNumber.fromString(currentBlock.toString()))
+          .toString()
+          .split('.')[0]
+      : '----'
+  const withdrawDurationRemainingBlocks =
+    currentBlock && withdrawLimit
+      ? ethers.FixedNumber.fromString(withdrawLimit.toString())
+          .subUnsafe(ethers.FixedNumber.fromString(currentBlock.toString()))
+          .toString()
+          .split('.')[0]
+      : '----'
 
   // check if there's some withdrawable tokens
   useEffect(() => {
     setIsTokenWithdrawable(false)
-    if (currentPeriod && (currentPeriod as BigNumber).toNumber() !== 0) {
+    if (
+      currentPeriod &&
+      (currentPeriod as BigNumber).toNumber() !== 0 &&
+      numOfPeriods &&
+      (numOfPeriods as BigNumber).toNumber() !== 0
+    ) {
+      const currentPeriodInNumber = (currentPeriod as BigNumber).toNumber()
+      const numOfPeriodsInNumber = (numOfPeriods as BigNumber).toNumber()
+      const periodLimit =
+        currentPeriodInNumber < numOfPeriodsInNumber
+          ? currentPeriodInNumber
+          : numOfPeriodsInNumber
       if (participations) {
-        for (let i = 0; i < (currentPeriod as BigNumber).toNumber(); i++) {
+        for (let i = 0; i < periodLimit; i++) {
           if (!(participations[i] as BigNumber).eq('0'))
             setIsTokenWithdrawable(true)
         }
       }
     }
-  }, [participations, currentPeriod])
+  }, [participations, currentPeriod, numOfPeriods])
 
   // calculate current sale phase
   useEffect(() => {
@@ -159,6 +194,17 @@ const Home: NextPage = () => {
     const signer = wallet.getSigner()
     const contract = ICO__factory.connect(contractAddress, signer)
     contract.participate({
+      value: ethers.FixedNumber.fromString(eth)
+        .mulUnsafe(decimal)
+        .toString()
+        .split('.')[0],
+    })
+  }
+  const purchase = (eth: string) => {
+    if (!eth) return
+    const signer = wallet.getSigner()
+    const contract = ICO__factory.connect(contractAddress, signer)
+    contract.purchase({
       value: ethers.FixedNumber.fromString(eth)
         .mulUnsafe(decimal)
         .toString()
@@ -248,9 +294,19 @@ const Home: NextPage = () => {
             <div className="flex grow-0 flex-col items-center">
               <Text
                 str={
-                  periodSaleRemainingBlocks +
+                  (salePhase === 'NormalSale'
+                    ? periodSaleRemainingBlocks
+                    : salePhase === 'LastSale'
+                    ? lastSaleRemainingBlocks
+                    : withdrawDurationRemainingBlocks) +
                   ' ' +
-                  'Blocks Remaining Until the Period Sale Ends'
+                  'Blocks Remaining Until the ' +
+                  (salePhase === 'NormalSale'
+                    ? 'Period Sale'
+                    : salePhase === 'LastSale'
+                    ? 'Remaining Sale'
+                    : 'Withdrawable Duration') +
+                  ' Ends'
                 }
                 className="text-4xl leading-15"
               />
@@ -275,7 +331,7 @@ const Home: NextPage = () => {
                 }
                 ethToToken={ethToToken}
                 tokenToEth={tokenToEth}
-                onSubmit={participate}
+                onSubmit={salePhase === 'NormalSale' ? participate : purchase}
               />
             </div>
 
