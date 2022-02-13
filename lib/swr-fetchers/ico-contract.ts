@@ -26,6 +26,7 @@ const provider = new ethers.providers.JsonRpcProvider(providerURL)
  * @remarks when type is "currentPeriod", args are not used.
  * @remarks when type is "participation", arg1 is address and arg2 is period.
  * @remarks when type is "withdrawal", arg1 is address and arg2 is not used.
+ * @remarks when type is "balanceOf", arg1 is address adn arg2 is not used.
  *
  * @returns the data you specified in type.
  */
@@ -44,6 +45,7 @@ export const ICOContractFetcher: Fetcher<
       | 'currentPeriod'
       | 'participation'
       | 'withdrawal'
+      | 'balanceOf'
     ),
     any,
     any
@@ -84,6 +86,9 @@ export const ICOContractFetcher: Fetcher<
       break
     case 'withdrawal':
       return contract.withdrawal(arg1)
+      break
+    case 'balanceOf':
+      return contract.balanceOf(arg1)
       break
   }
 }

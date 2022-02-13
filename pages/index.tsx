@@ -5,7 +5,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
-import useSWR from 'swr'
+import useSWR, { SWRConfig } from 'swr'
 import useSWRInfinite from 'swr/infinite'
 
 import { Button } from '../components/Button'
@@ -51,12 +51,15 @@ const Home: NextPage = () => {
       if (index === (numOfPeriods as BigNumber).toNumber()) return null
       return ['participation', account, index]
     },
-    ICOContractFetcher
+    ICOContractFetcher,
+    { refreshInterval: 1000, revalidateAll: true }
   )
   const { data: withdrawal } = useSWR(
     ['withdrawal', account],
     ICOContractFetcher
   )
+
+  console.log(participations)
 
   // update size of participation array to be loaded
   useEffect(() => {
@@ -88,8 +91,6 @@ const Home: NextPage = () => {
       }
     }
   }, [participations, currentPeriod])
-
-  console.log(participations)
 
   // calculate current sale phase
   useEffect(() => {
@@ -166,142 +167,168 @@ const Home: NextPage = () => {
         .split('.')[0],
     })
   }
+  const withdrawToken = () => {
+    let withdrawablePeriods = []
+    if (participations) {
+      for (let i = 0; i < (currentPeriod as BigNumber).toNumber(); i++) {
+        if (!(participations[i] as BigNumber).eq('0'))
+          withdrawablePeriods.push(i)
+      }
+    }
+    const signer = wallet.getSigner()
+    const contract = ICO__factory.connect(contractAddress, signer)
+    withdrawablePeriods.forEach((period) => contract.withdrawToken(period))
+  }
+  const withdrawEth = () => {
+    const signer = wallet.getSigner()
+    const contract = ICO__factory.connect(contractAddress, signer)
+    contract.withdrawETH()
+  }
 
   return (
-    <div className="relative flex h-full flex-col bg-white-pink">
-      <Head>
-        <title>Token name here</title>
-      </Head>
+    <SWRConfig value={{ refreshInterval: 1000 }}>
+      <div className="relative flex h-full flex-col bg-white-pink">
+        <Head>
+          <title>Token name here</title>
+        </Head>
 
-      {/* Wallet Menu Modal */}
-      <div
-        className={
-          'absolute z-50 flex h-full w-full cursor-pointer flex-row items-center justify-center bg-blue-black/25 transition-visibility duration-300' +
-          ' ' +
-          (isWalletMenuShown ? '' : 'invisible opacity-0')
-        }
-        onClick={closeWalletMenu}
-      >
-        <div
-          className="rounded-3xl bg-white py-5"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div
-            className="p-8"
-            onClick={async () => {
-              await activate(injected)
-              closeWalletMenu()
-            }}
-          >
-            <Image
-              alt="metamask logo"
-              src="/metamask-logo.svg"
-              width="320"
-              height="62"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Header */}
-      <header className="flex grow-0 flex-row items-center justify-between px-12 font">
-        <Button hidden str={active ? 'Disconnect Wallet' : 'Connect Wallet'} />
-        <h1 className="h-[6.75rem] text-[4rem] text-blue-black">Token Logo</h1>
-        <Button
-          str={active ? 'Disconnect Wallet' : 'Connect Wallet'}
-          onClick={() => (active ? deactivate() : openWalletMenu())}
-        />
-      </header>
-
-      {/* Main Contents */}
-      <div className="grow">
-        {/* Shown when not closed */}
+        {/* Wallet Menu Modal */}
         <div
           className={
-            'flex h-full flex-col' +
+            'absolute z-50 flex h-full w-full cursor-pointer flex-row items-center justify-center bg-blue-black/25 transition-visibility duration-300' +
             ' ' +
-            (salePhase === 'Closed' ? 'hidden' : '')
+            (isWalletMenuShown ? '' : 'invisible opacity-0')
           }
+          onClick={closeWalletMenu}
         >
-          <div className="flex grow-0 flex-col items-center">
-            <Text
-              str={
-                periodSaleRemainingBlocks +
-                ' ' +
-                'Blocks Remaining Until the Period Sale Ends'
-              }
-              className="text-4xl leading-15"
-            />
-            <Text
-              str={
-                '1.0 ETH = ' +
-                ethers.FixedNumber.fromString('0.01')
-                  .mulUnsafe(
-                    ethers.FixedNumber.fromString(rate?.toString() || '0')
-                  )
-                  .toString() +
-                ' TKN'
-              }
-              className="text-4xl leading-15"
-            />
-            <SwapForm
-              type={salePhase === 'LastSale' ? 'purchase' : 'participate'}
-              disabled={
-                !active ||
-                salePhase === 'WithdrawOnly' ||
-                salePhase === 'Closed'
-              }
-              ethToToken={ethToToken}
-              tokenToEth={tokenToEth}
-              onSubmit={participate}
-            />
-          </div>
-
-          <div className="flex grow flex-col items-center justify-evenly">
-            <Button
-              str="Withdraw Token"
-              className="w-[560px]"
-              disabled={!isTokenWithdrawable}
-            />
-            <div className="flex flex-col items-center justify-center">
-              <Text
-                str={
-                  'You can withdraw ' +
-                  (withdrawal
-                    ? ethers.FixedNumber.fromString(
-                        (withdrawal as BigNumber).toString()
-                      )
-                        .divUnsafe(decimal)
-                        .toString()
-                    : '----') +
-                  ' ETH'
-                }
-                className="text-3xl"
-              />
-              <Button
-                str="Withdraw ETH"
-                className="w-[560px]"
-                disabled={withdrawal ? (withdrawal as BigNumber).eq(0) : true}
+          <div
+            className="rounded-3xl bg-white py-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className="p-8"
+              onClick={async () => {
+                await activate(injected)
+                closeWalletMenu()
+              }}
+            >
+              <Image
+                alt="metamask logo"
+                src="/metamask-logo.svg"
+                width="320"
+                height="62"
               />
             </div>
           </div>
         </div>
 
-        {/* Shown when closed */}
-        <div
-          className={
-            'flex grow flex-col items-center justify-center' +
-            ' ' +
-            (salePhase === 'Closed' ? '' : 'hidden')
-          }
-        >
-          <Text
-            str="ALL SALES HAS BEEN ALREADY FINISHED"
-            className="text-[4rem] leading-[6.75rem]"
+        {/* Header */}
+        <header className="flex grow-0 flex-row items-center justify-between px-12 font">
+          <Button
+            hidden
+            str={active ? 'Disconnect Wallet' : 'Connect Wallet'}
           />
+          <h1 className="h-[6.75rem] text-[4rem] text-blue-black">
+            Token Logo
+          </h1>
+          <Button
+            str={active ? 'Disconnect Wallet' : 'Connect Wallet'}
+            onClick={() => (active ? deactivate() : openWalletMenu())}
+          />
+        </header>
+
+        {/* Main Contents */}
+        <div className="grow">
+          {/* Shown when not closed */}
+          <div
+            className={
+              'flex h-full flex-col' +
+              ' ' +
+              (salePhase === 'Closed' ? 'hidden' : '')
+            }
+          >
+            <div className="flex grow-0 flex-col items-center">
+              <Text
+                str={
+                  periodSaleRemainingBlocks +
+                  ' ' +
+                  'Blocks Remaining Until the Period Sale Ends'
+                }
+                className="text-4xl leading-15"
+              />
+              <Text
+                str={
+                  '1.0 ETH = ' +
+                  ethers.FixedNumber.fromString('0.01')
+                    .mulUnsafe(
+                      ethers.FixedNumber.fromString(rate?.toString() || '0')
+                    )
+                    .toString() +
+                  ' TKN'
+                }
+                className="text-4xl leading-15"
+              />
+              <SwapForm
+                type={salePhase === 'LastSale' ? 'purchase' : 'participate'}
+                disabled={
+                  !active ||
+                  salePhase === 'WithdrawOnly' ||
+                  salePhase === 'Closed'
+                }
+                ethToToken={ethToToken}
+                tokenToEth={tokenToEth}
+                onSubmit={participate}
+              />
+            </div>
+
+            <div className="flex grow flex-col items-center justify-evenly">
+              <Button
+                str="Withdraw Token"
+                className="w-[560px]"
+                disabled={!isTokenWithdrawable}
+                onClick={withdrawToken}
+              />
+              <div className="flex flex-col items-center justify-center">
+                <Text
+                  str={
+                    'You can withdraw ' +
+                    (withdrawal
+                      ? ethers.FixedNumber.fromString(
+                          (withdrawal as BigNumber).toString()
+                        )
+                          .divUnsafe(decimal)
+                          .toString()
+                      : '----') +
+                    ' ETH'
+                  }
+                  className="text-3xl"
+                />
+                <Button
+                  str="Withdraw ETH"
+                  className="w-[560px]"
+                  disabled={withdrawal ? (withdrawal as BigNumber).eq(0) : true}
+                  onClick={withdrawEth}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Shown when closed */}
+          <div
+            className={
+              'flex grow flex-col items-center justify-center' +
+              ' ' +
+              (salePhase === 'Closed' ? '' : 'hidden')
+            }
+          >
+            <Text
+              str="ALL SALES HAS BEEN ALREADY FINISHED"
+              className="text-[4rem] leading-[6.75rem]"
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </SWRConfig>
   )
 }
 

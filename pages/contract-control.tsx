@@ -20,6 +20,7 @@ const ContractControl: NextPage = () => {
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS
   const [participationAddress, setParticipationAddress] = useState('')
   const [participationPeriod, setParticipationPeriod] = useState('')
+  const [balanceOfAddress, setBalanceOfAddress] = useState('')
 
   const { data: account } = useSWR('account', metamaskFetcher)
   const { data: balance } = useSWR(['ethBalance', account], web3Fetcher)
@@ -37,6 +38,10 @@ const ContractControl: NextPage = () => {
     ICOContractFetcher
   )
   const { data: currentPeriod } = useSWR(['currentPeriod'], ICOContractFetcher)
+  const { data: balanceOf } = useSWR(
+    ['balanceOf', balanceOfAddress],
+    ICOContractFetcher
+  )
 
   return (
     <div>
@@ -69,7 +74,7 @@ const ContractControl: NextPage = () => {
         </p>
         <br />
         <p>currentPeriod: {currentPeriod?.toString() || 'N'}</p>
-        <h3 className="text-xl">participations</h3>
+        <h3 className="text-xl">participation</h3>
         <p>{participation?.toString() || 'null'}</p>
         <input
           type="text"
@@ -82,6 +87,14 @@ const ContractControl: NextPage = () => {
           className="border-2 border-black"
           placeholder="period"
           onInput={(e) => setParticipationPeriod(e.currentTarget.value)}
+        />
+        <h3 className="text-xl">balanceOf</h3>
+        <p>{balanceOf?.toString() || 'null'}</p>
+        <input
+          type="text"
+          className="border-2 border-black"
+          placeholder="address"
+          onInput={(e) => setBalanceOfAddress(e.currentTarget.value)}
         />
       </div>
       <div>
