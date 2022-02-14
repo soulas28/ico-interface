@@ -143,8 +143,8 @@ const Home: NextPage = () => {
       const currentBlockInNumber = currentBlock as number
 
       if (
-        deployedBlockInNumber + withdrawLimitInNumber <= currentBlockInNumber ||
-        (remainingToken as BigNumber).eq('0')
+        deployedBlockInNumber + withdrawLimitInNumber <=
+        currentBlockInNumber
       ) {
         setSalePhase('Closed')
       } else if (currentPeriodInNumber < numOfPeriodsInNumber)
