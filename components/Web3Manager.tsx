@@ -21,7 +21,10 @@ export function Web3Manager() {
           'You seems not to have any wallet. Please install metamask first.'
         )
       else if (error instanceof UnsupportedChainIdError)
-        alert('Unsupported chainId.')
+        alert(
+          'Unsupported chainId. Please Switch to ' +
+            (process.env.NEXT_PUBLIC_SUPPORT_CHAIN_ID || '1')
+        )
       else {
         if (process.env.NODE_ENV !== 'production') console.error(error)
       }

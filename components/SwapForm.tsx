@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import type { FormEventHandler } from 'react'
+
 import { Button } from './Button'
 import { CurrencyInput } from './CurrencyInput'
 import { DownArrow } from './DownArrow'
@@ -8,10 +11,36 @@ export interface SwapFormProps {
   disabled?: boolean
   /** form type */
   type: 'participate' | 'purchase'
+  /** function to convert eth to token. */
+  ethToToken: (eth: string) => Promise<string>
+  /** function to convert token to eth. */
+  tokenToEth: (token: string) => Promise<string>
+  /** function called when submitted */
+  onSubmit: (eth: string) => void
 }
 
 /** component to display the form for currency swapping */
 export const SwapForm: React.FC<SwapFormProps> = (props) => {
+  const [eth, setEth] = useState('')
+  const [tkn, setTkn] = useState('')
+
+  const onEthUpdated: FormEventHandler<HTMLInputElement> = async (e) => {
+    const value = e.currentTarget.value
+    if (validate(value)) {
+      setEth(value)
+      setTkn(await props.ethToToken(value))
+    }
+  }
+
+  const onTknUpdated: FormEventHandler<HTMLInputElement> = async (e) => {
+    const value = e.currentTarget.value
+    if (validate(value)) {
+      setTkn(value)
+      setEth(await props.tokenToEth(value))
+    }
+  }
+  const validate = (target: string) => target.match(/^[0-9]*\.?[0-9]{0,18}$/)
+
   return (
     <div className="relative">
       {/* gray overlay */}
@@ -30,14 +59,15 @@ export const SwapForm: React.FC<SwapFormProps> = (props) => {
       </div>
 
       <div className="flex flex-col items-center rounded-3xl bg-white px-10 py-10 drop-shadow">
-        <CurrencyInput unit="ETH" />
+        <CurrencyInput unit="ETH" onInput={onEthUpdated} value={eth} />
         <DownArrow />
-        <CurrencyInput unit="TKN" />
+        <CurrencyInput unit="TKN" onInput={onTknUpdated} value={tkn} />
         <DownArrow hidden />
         <Button
           str={props.type === 'participate' ? 'Participate' : 'Purchase'}
           className="w-[560px]"
           disabled={props.disabled}
+          onClick={() => props.onSubmit(eth)}
         />
       </div>
     </div>
