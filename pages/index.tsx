@@ -28,7 +28,6 @@ const Home: NextPage = () => {
   const decimal = ethers.FixedNumber.fromString('1000000000000000000')
   // TODO: metamask error handling
   // TODO: remaining token indicator
-  // TODO: support for early finish
   // TODO: chain change
 
   // states
