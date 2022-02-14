@@ -26,7 +26,6 @@ type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
 const Home: NextPage = () => {
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || ''
   const decimal = ethers.FixedNumber.fromString('1000000000000000000')
-  // TODO: metamask error handling
   // TODO: chain change
 
   // states
@@ -207,23 +206,27 @@ const Home: NextPage = () => {
     if (!eth) return
     const signer = wallet.getSigner()
     const contract = ICO__factory.connect(contractAddress, signer)
-    contract.participate({
-      value: ethers.FixedNumber.fromString(eth)
-        .mulUnsafe(decimal)
-        .toString()
-        .split('.')[0],
-    })
+    contract
+      .participate({
+        value: ethers.FixedNumber.fromString(eth)
+          .mulUnsafe(decimal)
+          .toString()
+          .split('.')[0],
+      })
+      .catch((e) => alert(e.data.message))
   }
   const purchase = (eth: string) => {
     if (!eth) return
     const signer = wallet.getSigner()
     const contract = ICO__factory.connect(contractAddress, signer)
-    contract.purchase({
-      value: ethers.FixedNumber.fromString(eth)
-        .mulUnsafe(decimal)
-        .toString()
-        .split('.')[0],
-    })
+    contract
+      .purchase({
+        value: ethers.FixedNumber.fromString(eth)
+          .mulUnsafe(decimal)
+          .toString()
+          .split('.')[0],
+      })
+      .catch((e) => alert(e.data.message))
   }
   const withdrawToken = () => {
     let withdrawablePeriods = []
@@ -235,12 +238,14 @@ const Home: NextPage = () => {
     }
     const signer = wallet.getSigner()
     const contract = ICO__factory.connect(contractAddress, signer)
-    withdrawablePeriods.forEach((period) => contract.withdrawToken(period))
+    withdrawablePeriods.forEach((period) =>
+      contract.withdrawToken(period).catch((e) => alert(e.data.message))
+    )
   }
   const withdrawEth = () => {
     const signer = wallet.getSigner()
     const contract = ICO__factory.connect(contractAddress, signer)
-    contract.withdrawETH()
+    contract.withdrawETH().catch((e) => alert(e.data.message))
   }
 
   return (
