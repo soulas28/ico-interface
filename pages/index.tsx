@@ -212,7 +212,7 @@ const Home: NextPage = () => {
           .toString()
           .split('.')[0],
       })
-      .catch((e) => alert(e.data.message))
+      .catch((e) => alert(e.message))
   }
   const purchase = (eth: string) => {
     if (!eth) return
@@ -225,7 +225,7 @@ const Home: NextPage = () => {
           .toString()
           .split('.')[0],
       })
-      .catch((e) => alert(e.data.message))
+      .catch((e) => alert(e.message))
   }
   const withdrawToken = () => {
     let withdrawablePeriods = []
@@ -238,13 +238,13 @@ const Home: NextPage = () => {
     const signer = wallet.getSigner()
     const contract = ICO__factory.connect(contractAddress, signer)
     withdrawablePeriods.forEach((period) =>
-      contract.withdrawToken(period).catch((e) => alert(e.data.message))
+      contract.withdrawToken(period).catch((e) => alert(e.message))
     )
   }
   const withdrawEth = () => {
     const signer = wallet.getSigner()
     const contract = ICO__factory.connect(contractAddress, signer)
-    contract.withdrawETH().catch((e) => alert(e.data.message))
+    contract.withdrawETH().catch((e) => alert(e.message))
   }
 
   return (
