@@ -333,7 +333,11 @@ const Home: NextPage = () => {
                       ethers.FixedNumber.fromString(rate?.toString() || '0')
                     )
                     .toString() +
-                  ' TKN'
+                  ' TKN' +
+                  (salePhase === 'LastSale'
+                    ? (remainingToken as BigNumber).toString() ||
+                      '----' + ' Tokens Remaining'
+                    : '')
                 }
                 className="text-4xl leading-15"
               />
