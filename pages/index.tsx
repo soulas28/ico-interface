@@ -26,7 +26,6 @@ type PhaseType = 'NormalSale' | 'LastSale' | 'WithdrawOnly' | 'Closed'
 const Home: NextPage = () => {
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || ''
   const decimal = ethers.FixedNumber.fromString('1000000000000000000')
-  // TODO: chain change
 
   // states
   const [isWalletMenuShown, setIsWalletMenuShown] = useState(false)

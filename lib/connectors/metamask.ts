@@ -1,5 +1,5 @@
 import { InjectedConnector } from '@web3-react/injected-connector'
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42, 1337],
+  supportedChainIds: [Number(process.env.NEXT_PUBLIC_SUPPORT_CHAIN_ID || '1')],
 })
