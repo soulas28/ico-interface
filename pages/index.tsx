@@ -338,13 +338,15 @@ const Home: NextPage = () => {
                     .toString() +
                   ' TKN' +
                   (salePhase === 'LastSale'
-                    ? remainingToken
-                      ? ethers.FixedNumber.fromString(
-                          (remainingToken as BigNumber).toString()
-                        )
-                          .divUnsafe(decimal)
-                          .toString()
-                      : '----' + ' Tokens Remaining'
+                    ? '   and ' +
+                      (remainingToken
+                        ? ethers.FixedNumber.fromString(
+                            (remainingToken as BigNumber).toString()
+                          )
+                            .divUnsafe(decimal)
+                            .toString()
+                        : '----') +
+                      ' Tokens Remaining'
                     : '')
                 }
                 className="text-4xl leading-15"
