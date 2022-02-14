@@ -27,7 +27,6 @@ const Home: NextPage = () => {
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || ''
   const decimal = ethers.FixedNumber.fromString('1000000000000000000')
   // TODO: metamask error handling
-  // TODO: remaining token indicator
   // TODO: chain change
 
   // states
@@ -335,8 +334,13 @@ const Home: NextPage = () => {
                     .toString() +
                   ' TKN' +
                   (salePhase === 'LastSale'
-                    ? (remainingToken as BigNumber).toString() ||
-                      '----' + ' Tokens Remaining'
+                    ? remainingToken
+                      ? ethers.FixedNumber.fromString(
+                          (remainingToken as BigNumber).toString()
+                        )
+                          .divUnsafe(decimal)
+                          .toString()
+                      : '----' + ' Tokens Remaining'
                     : '')
                 }
                 className="text-4xl leading-15"
