@@ -29,7 +29,7 @@ const Home: NextPage = () => {
   // TODO: metamask error handling
   // TODO: remaining token indicator
   // TODO: support for early finish
-  // FIXME: finish condition error
+  // TODO: chain change
 
   // states
   const [isWalletMenuShown, setIsWalletMenuShown] = useState(false)
@@ -94,8 +94,9 @@ const Home: NextPage = () => {
           .split('.')[0]
       : '----'
   const withdrawDurationRemainingBlocks =
-    currentBlock && withdrawLimit
+    currentBlock && withdrawLimit && deployedBlock
       ? ethers.FixedNumber.fromString(withdrawLimit.toString())
+          .addUnsafe(ethers.FixedNumber.fromString(deployedBlock.toString()))
           .subUnsafe(ethers.FixedNumber.fromString(currentBlock.toString()))
           .toString()
           .split('.')[0]
