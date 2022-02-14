@@ -62,6 +62,10 @@ const Home: NextPage = () => {
     ['withdrawal', account],
     ICOContractFetcher
   )
+  const { data: remainingToken } = useSWR(
+    ['balanceOf', contractAddress],
+    ICOContractFetcher
+  )
 
   // update size of participation array to be loaded
   useEffect(() => {
@@ -133,7 +137,8 @@ const Home: NextPage = () => {
       currentPeriod &&
       numOfPeriods &&
       withdrawLimit &&
-      currentBlock
+      currentBlock &&
+      remainingToken
     ) {
       const deployedBlockInNumber = (deployedBlock as BigNumber).toNumber()
       const currentPeriodInNumber = (currentPeriod as BigNumber).toNumber()
@@ -141,15 +146,25 @@ const Home: NextPage = () => {
       const withdrawLimitInNumber = (withdrawLimit as BigNumber).toNumber()
       const currentBlockInNumber = currentBlock as number
 
-      if (deployedBlockInNumber + withdrawLimitInNumber <= currentBlockInNumber)
+      if (
+        deployedBlockInNumber + withdrawLimitInNumber <= currentBlockInNumber ||
+        (remainingToken as BigNumber).eq('0')
+      ) {
         setSalePhase('Closed')
-      else if (currentPeriodInNumber < numOfPeriodsInNumber)
+      } else if (currentPeriodInNumber < numOfPeriodsInNumber)
         setSalePhase('NormalSale')
       else if (currentPeriodInNumber === numOfPeriodsInNumber)
         setSalePhase('LastSale')
       else setSalePhase('WithdrawOnly')
     }
-  }, [deployedBlock, currentPeriod, numOfPeriods, withdrawLimit, currentBlock])
+  }, [
+    deployedBlock,
+    currentPeriod,
+    numOfPeriods,
+    withdrawLimit,
+    currentBlock,
+    remainingToken,
+  ])
 
   // control wallet menu
   const openWalletMenu = () => setIsWalletMenuShown(true)
@@ -371,7 +386,7 @@ const Home: NextPage = () => {
           {/* Shown when closed */}
           <div
             className={
-              'flex grow flex-col items-center justify-center' +
+              'flex h-full flex-col items-center justify-center' +
               ' ' +
               (salePhase === 'Closed' ? '' : 'hidden')
             }
